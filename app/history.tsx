@@ -248,7 +248,7 @@ export default function HistoryScreen() {
                         {item.selectedProcedures && item.selectedProcedures.length > 0 ? (
                           <View style={styles.proceduresContainer}>
                             <Text style={styles.proceduresTitle}>ביצוע נוהל לבחירת הקב״ט (מבחן ידע קצר)</Text>
-                            {item.selectedProcedures?.map((proc, index) => (
+                            {item.selectedProcedures?.map((proc: any, index: number) => (
                               <View key={index} style={styles.procedureItem}>
                                 <Text style={styles.procedureName}>{proc.procedure}</Text>
                                 <View style={[

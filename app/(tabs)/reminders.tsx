@@ -21,7 +21,7 @@ interface CategoryTab {
 }
 
 const categories: CategoryTab[] = [
-  { id: 'guards', title: 'מאבטחים', icon: Shield, color: '#2563EB' },
+  { id: 'guards', title: 'בקרה', icon: Shield, color: '#2563EB' },
   { id: 'exercises', title: 'תרגילים', icon: Dumbbell, color: '#DC2626' },
 ];
 
@@ -44,7 +44,7 @@ export default function RemindersScreen() {
 
     return (
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>כל המאבטחים</Text>
+        <Text style={styles.sectionTitle}>כל הבקרות</Text>
         <FlatList
           data={reminders}
           scrollEnabled={false}
@@ -118,7 +118,7 @@ export default function RemindersScreen() {
 
     return (
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>כל המאבטחים</Text>
+        <Text style={styles.sectionTitle}>כל הבקרות</Text>
         <FlatList
           data={sortedGuardsByExercise}
           scrollEnabled={false}

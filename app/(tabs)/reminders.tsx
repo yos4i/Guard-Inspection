@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { Stack } from 'expo-router';
-import { useGuardReminders, useGuards } from '@/contexts/GuardsProvider';
+import { useGuardReminders, useSortedGuardsByExercise, useGuards } from '@/contexts/GuardsProvider';
 import { Shield, Dumbbell, Timer } from 'lucide-react-native';
 
 type CategoryType = 'guards' | 'exercises';
@@ -27,7 +27,8 @@ const categories: CategoryTab[] = [
 
 export default function RemindersScreen() {
   const reminders = useGuardReminders();
-  const { guards: allGuards, getLastExerciseDate } = useGuards();
+  const sortedGuardsByExercise = useSortedGuardsByExercise();
+  const { getLastExerciseDate } = useGuards();
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('guards');
 
   const renderGuardsCategory = () => {
@@ -105,7 +106,7 @@ export default function RemindersScreen() {
   };
 
   const renderExercisesCategory = () => {
-    if (allGuards.length === 0) {
+    if (sortedGuardsByExercise.length === 0) {
       return (
         <View style={styles.emptyContainer}>
           <Dumbbell size={60} color="#D1D5DB" strokeWidth={1.5} />
@@ -115,40 +116,11 @@ export default function RemindersScreen() {
       );
     }
 
-    const sortedGuards = [...allGuards].sort((a, b) => {
-      const lastExerciseA = getLastExerciseDate(a.id);
-      const lastExerciseB = getLastExerciseDate(b.id);
-      
-      const daysA = lastExerciseA
-        ? Math.max(
-            0,
-            180 -
-              Math.floor(
-                (Date.now() - new Date(lastExerciseA).getTime()) /
-                  (1000 * 60 * 60 * 24)
-              )
-          )
-        : 0;
-      
-      const daysB = lastExerciseB
-        ? Math.max(
-            0,
-            180 -
-              Math.floor(
-                (Date.now() - new Date(lastExerciseB).getTime()) /
-                  (1000 * 60 * 60 * 24)
-              )
-          )
-        : 0;
-      
-      return daysA - daysB;
-    });
-
     return (
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>כל המאבטחים</Text>
         <FlatList
-          data={sortedGuards}
+          data={sortedGuardsByExercise}
           scrollEnabled={false}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => {

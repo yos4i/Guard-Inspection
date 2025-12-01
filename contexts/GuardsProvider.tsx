@@ -214,3 +214,27 @@ export const useGuardReminders = () => {
       .sort((a, b) => a.daysUntilNext - b.daysUntilNext);
   }, [guards, getDaysUntilNextInspection, getLastInspectionDate]);
 };
+
+export const useSortedGuards = () => {
+  const { guards, getDaysUntilNextInspection } = useGuards();
+
+  return useMemo(() => {
+    return [...guards].sort((a, b) => {
+      const daysA = getDaysUntilNextInspection(a.id);
+      const daysB = getDaysUntilNextInspection(b.id);
+      return daysA - daysB;
+    });
+  }, [guards, getDaysUntilNextInspection]);
+};
+
+export const useSortedGuardsByExercise = () => {
+  const { guards, getDaysUntilNextExercise } = useGuards();
+
+  return useMemo(() => {
+    return [...guards].sort((a, b) => {
+      const daysA = getDaysUntilNextExercise(a.id);
+      const daysB = getDaysUntilNextExercise(b.id);
+      return daysA - daysB;
+    });
+  }, [guards, getDaysUntilNextExercise]);
+};

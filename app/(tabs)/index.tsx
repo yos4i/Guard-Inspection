@@ -9,20 +9,13 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
-import { useGuards } from '@/contexts/GuardsProvider';
+import { useGuards, useSortedGuards } from '@/contexts/GuardsProvider';
 import { UserCircle, Plus, Trash2, ClipboardList } from 'lucide-react-native';
 
 export default function GuardsScreen() {
   const router = useRouter();
-  const { guards: allGuards, deleteGuard, isLoading, getDaysUntilNextInspection } = useGuards();
-
-  const guards = React.useMemo(() => {
-    return [...allGuards].sort((a, b) => {
-      const daysA = getDaysUntilNextInspection(a.id);
-      const daysB = getDaysUntilNextInspection(b.id);
-      return daysA - daysB;
-    });
-  }, [allGuards, getDaysUntilNextInspection]);
+  const { deleteGuard, isLoading, getDaysUntilNextInspection } = useGuards();
+  const guards = useSortedGuards();
 
   const handleDelete = (guardId: string, name: string) => {
     Alert.alert(

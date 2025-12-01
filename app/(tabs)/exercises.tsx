@@ -9,42 +9,12 @@ import {
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { Dumbbell, UserCircle, Timer } from 'lucide-react-native';
-import { useGuards } from '@/contexts/GuardsProvider';
+import { useGuards, useSortedGuardsByExercise } from '@/contexts/GuardsProvider';
 
 export default function ExercisesScreen() {
-  const { guards: allGuards, isLoading, getLastExerciseDate, getGuardExercises } = useGuards();
+  const { isLoading, getLastExerciseDate, getGuardExercises } = useGuards();
+  const guards = useSortedGuardsByExercise();
   const router = useRouter();
-
-  const guards = React.useMemo(() => {
-    return [...allGuards].sort((a, b) => {
-      const lastExerciseA = getLastExerciseDate(a.id);
-      const lastExerciseB = getLastExerciseDate(b.id);
-      
-      const daysA = lastExerciseA
-        ? Math.max(
-            0,
-            180 -
-              Math.floor(
-                (Date.now() - new Date(lastExerciseA).getTime()) /
-                  (1000 * 60 * 60 * 24)
-              )
-          )
-        : 0;
-      
-      const daysB = lastExerciseB
-        ? Math.max(
-            0,
-            180 -
-              Math.floor(
-                (Date.now() - new Date(lastExerciseB).getTime()) /
-                  (1000 * 60 * 60 * 24)
-              )
-          )
-        : 0;
-      
-      return daysA - daysB;
-    });
-  }, [allGuards, getLastExerciseDate]);
 
   if (isLoading) {
     return (

@@ -49,10 +49,7 @@ export default function AddGuardScreen() {
       Alert.alert('שגיאה', 'מספר טלפון לא תקין (05XXXXXXXX)');
       return false;
     }
-    if (guards.length >= 30) {
-      Alert.alert('שגיאה', 'הגעת למגבלת 30 מאבטחים');
-      return false;
-    }
+
     return true;
   };
 
@@ -104,7 +101,7 @@ export default function AddGuardScreen() {
 
         <Text style={styles.title}>פרטי מאבטח חדש</Text>
         <Text style={styles.subtitle}>
-          מאבטחים: {guards.length}/30
+          מאבטחים: {guards.length}
         </Text>
 
         <View style={styles.form}>

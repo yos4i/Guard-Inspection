@@ -64,8 +64,8 @@ export default function ExercisesScreen() {
               : 0;
 
             const getTimerColor = (days: number) => {
-              if (days >= 90 && days <= 180) return '#10B981';
-              if (days >= 30 && days < 90) return '#F59E0B';
+              if (days > 90) return '#10B981';
+              if (days > 30) return '#F59E0B';
               return '#DC2626';
             };
 

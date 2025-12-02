@@ -29,17 +29,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="investigations"
-        options={{
-          title: "תחקיר",
-          tabBarIcon: ({ color }) => <Search color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="exercises"
         options={{
           title: "תרגילים",
           tabBarIcon: ({ color }) => <Dumbbell color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="investigations"
+        options={{
+          title: "תחקיר",
+          tabBarIcon: ({ color }) => <Search color={color} />,
         }}
       />
     </Tabs>

@@ -22,7 +22,7 @@ export default function ExercisesScreen() {
         <Stack.Screen
           options={{
             title: 'תרגילים',
-            headerTitleAlign: 'left',
+            headerTitleAlign: 'center',
           }}
         />
         <ActivityIndicator size="large" color="#2563EB" />
@@ -35,7 +35,7 @@ export default function ExercisesScreen() {
       <Stack.Screen
         options={{
           title: 'תרגילים',
-          headerTitleAlign: 'left',
+          headerTitleAlign: 'center',
         }}
       />
 

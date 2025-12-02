@@ -222,7 +222,7 @@ export default function RemindersScreen() {
       <Stack.Screen
         options={{
           title: 'תזכורות',
-          headerTitleAlign: 'left',
+          headerTitleAlign: 'center',
           headerLeft: () => (
             <TouchableOpacity
               onPress={handleLogout}

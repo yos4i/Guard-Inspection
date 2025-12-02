@@ -13,7 +13,7 @@ export default function InvestigationsScreen() {
       <Stack.Screen
         options={{
           title: 'תחקיר',
-          headerTitleAlign: 'left',
+          headerTitleAlign: 'center',
         }}
       />
 

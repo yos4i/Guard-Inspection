@@ -13,7 +13,7 @@ import {
 import { Stack, useRouter, useLocalSearchParams } from 'expo-router';
 import { useGuards } from '@/contexts/GuardsProvider';
 import { ClipboardCheck, CheckCircle2, Download } from 'lucide-react-native';
-import { File, Paths } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 
 export default function InspectionScreen() {
@@ -441,25 +441,40 @@ export default function InspectionScreen() {
 
   const handleExport = async () => {
     try {
-      const isAvailable = await Sharing.isAvailableAsync();
-      if (!isAvailable) {
-        Alert.alert('שגיאה', 'שיתוף קבצים אינו זמין במכשיר זה');
-        return;
-      }
-
       const htmlContent = generateHTMLReport();
       const fileName = `בקרה_${guard.firstName}_${guard.lastName}_${new Date().toISOString().split('T')[0]}.html`;
-      const file = new File(Paths.cache, fileName);
-      
-      file.write(htmlContent);
 
-      await Sharing.shareAsync(file.uri, {
-        mimeType: 'text/html',
-        dialogTitle: 'ייצוא טופס בקרה',
-        UTI: 'public.html',
-      });
+      if (Platform.OS === 'web') {
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+      } else {
+        const isAvailable = await Sharing.isAvailableAsync();
+        if (!isAvailable) {
+          Alert.alert('שגיאה', 'שיתוף קבצים אינו זמין במכשיר זה');
+          return;
+        }
 
-      Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+        const fileUri = `${FileSystem.cacheDirectory}${fileName}`;
+        await FileSystem.writeAsStringAsync(fileUri, htmlContent, {
+          encoding: FileSystem.EncodingType.UTF8,
+        });
+
+        await Sharing.shareAsync(fileUri, {
+          mimeType: 'text/html',
+          dialogTitle: 'ייצוא טופס בקרה',
+          UTI: 'public.html',
+        });
+
+        Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+      }
     } catch (error) {
       console.error('Export error:', error);
       Alert.alert('שגיאה', 'נכשל בייצוא הקובץ');

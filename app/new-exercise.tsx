@@ -1100,6 +1100,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700' as const,
     color: '#1F2937',
+    textAlign: 'right' as const,
   },
   sectionScoreBadge: {
     backgroundColor: '#DC2626',
@@ -1123,6 +1124,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600' as const,
     color: '#374151',
+    textAlign: 'right' as const,
   },
   input: {
     backgroundColor: '#F9FAFB',
@@ -1263,6 +1265,7 @@ const styles = StyleSheet.create({
     fontWeight: '600' as const,
     color: '#374151',
     flex: 1,
+    textAlign: 'right' as const,
   },
   ratingButtons: {
     flexDirection: 'row',
@@ -1365,6 +1368,7 @@ const styles = StyleSheet.create({
     fontWeight: '600' as const,
     color: '#374151',
     flex: 1,
+    textAlign: 'right' as const,
   },
   totalScoreValue: {
     flexDirection: 'row',
@@ -1404,6 +1408,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700' as const,
     color: '#991B1B',
+    textAlign: 'right' as const,
   },
   finalScoreValue: {
     flexDirection: 'row',
@@ -1435,6 +1440,7 @@ const styles = StyleSheet.create({
     fontWeight: '700' as const,
     color: '#78350F',
     flex: 1,
+    textAlign: 'right' as const,
   },
   kabtEvaluationInputContainer: {
     flexDirection: 'row',

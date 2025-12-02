@@ -14,6 +14,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useGuards } from '@/contexts/GuardsProvider';
 import { Dumbbell, Download } from 'lucide-react-native';
 import * as Sharing from 'expo-sharing';
+import { File, Paths } from 'expo-file-system';
 
 type ExerciseTypeOption = 'כניסה בכיסוי' | 'חפץ חשוד' | 'אדם חשוד' | 'אחר';
 type RatingLevel = 'מצוין' | 'טוב' | 'צריך שיפור';
@@ -327,17 +328,14 @@ export default function NewExerciseScreen() {
           return;
         }
 
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-          const base64data = reader.result as string;
-          await Sharing.shareAsync(base64data, {
-            mimeType: 'text/html',
-            dialogTitle: 'ייצוא דוח תרגיל',
-            UTI: 'public.html',
-          });
-        };
-        reader.readAsDataURL(blob);
+        const file = new File(Paths.cache, fileName);
+        file.write(htmlContent);
+
+        await Sharing.shareAsync(file.uri, {
+          mimeType: 'text/html',
+          dialogTitle: 'ייצוא דוח תרגיל',
+          UTI: 'public.html',
+        });
       }
     } catch (error) {
       console.error('Export error:', error);

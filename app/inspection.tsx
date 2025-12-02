@@ -12,7 +12,9 @@ import {
 } from 'react-native';
 import { Stack, useRouter, useLocalSearchParams } from 'expo-router';
 import { useGuards } from '@/contexts/GuardsProvider';
-import { ClipboardCheck, CheckCircle2 } from 'lucide-react-native';
+import { ClipboardCheck, CheckCircle2, Download } from 'lucide-react-native';
+import { File, Paths } from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 export default function InspectionScreen() {
   const router = useRouter();
@@ -175,6 +177,294 @@ export default function InspectionScreen() {
   };
 
   const scores = getTotalScore();
+
+  const generateHTMLReport = () => {
+    const getRatingLabel = (rating: 'needs_improvement' | 'good' | 'excellent') => {
+      switch (rating) {
+        case 'excellent': return 'מצוין';
+        case 'good': return 'טוב';
+        case 'needs_improvement': return 'דרוש שיפור';
+      }
+    };
+
+    const getRatingColor = (rating: 'needs_improvement' | 'good' | 'excellent') => {
+      switch (rating) {
+        case 'excellent': return '#10B981';
+        case 'good': return '#F59E0B';
+        case 'needs_improvement': return '#EF4444';
+      }
+    };
+
+    return `<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>טופס בקרה למאבטח - ${guard.firstName} ${guard.lastName}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f9fafb;
+    }
+    .header {
+      text-align: center;
+      background-color: #2563EB;
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      margin: 0 0 15px 0;
+      font-size: 28px;
+    }
+    .guard-info {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .guard-info h2 {
+      margin: 0 0 10px 0;
+      color: #1F2937;
+    }
+    .inspector-info {
+      background-color: #EEF2FF;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .section {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2563EB;
+      border-bottom: 2px solid #2563EB;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .rating-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #E5E7EB;
+    }
+    .rating-row:last-child {
+      border-bottom: none;
+    }
+    .rating-label {
+      font-weight: 500;
+      color: #374151;
+    }
+    .rating-value {
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 6px;
+      color: white;
+    }
+    .score-summary {
+      background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+      padding: 25px;
+      border-radius: 12px;
+      margin-top: 30px;
+      border: 2px solid #2563EB;
+    }
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 16px;
+    }
+    .total-score {
+      font-size: 22px;
+      font-weight: bold;
+      color: #2563EB;
+      border-top: 2px solid #2563EB;
+      padding-top: 15px;
+      margin-top: 15px;
+    }
+    .notes {
+      background-color: #FFFBEB;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+      border-right: 4px solid #F59E0B;
+    }
+    .procedure-item {
+      background-color: #F9FAFB;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 8px 0;
+      border-right: 3px solid #6B7280;
+    }
+    .signature-section {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #F9FAFB;
+      border-radius: 8px;
+    }
+    .date {
+      text-align: center;
+      color: #6B7280;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>טופס בקרה למאבטח</h1>
+  </div>
+
+  <div class="guard-info">
+    <h2>${guard.firstName} ${guard.lastName}</h2>
+    <p><strong>ת.ז:</strong> ${guard.idNumber}</p>
+  </div>
+
+  <div class="inspector-info">
+    <p><strong>שם הקב"ט המבקר:</strong> ${inspectorName || '---'}</p>
+    <p><strong>תאריך הבקרה:</strong> ${new Date().toLocaleDateString('he-IL')}</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">1. הופעה וציוד אישי</div>
+    <div class="rating-row">
+      <span class="rating-label">מדים תקניים (מכנס, חולצה, חגורה, נעליים סגורות)</span>
+      <span class="rating-value" style="background-color: ${getRatingColor(uniformComplete)}">${getRatingLabel(uniformComplete)}</span>
+    </div>
+    <div class="rating-row">
+      <span class="rating-label">תעודת מאבטח גלויה בתוקף</span>
+      <span class="rating-value" style="background-color: ${getRatingColor(guardBadgeValid)}">${getRatingLabel(guardBadgeValid)}</span>
+    </div>
+    <div class="rating-row">
+      <span class="rating-label">נשק אישי + נרתיק</span>
+      <span class="rating-value" style="background-color: ${getRatingColor(personalWeapon)}">${getRatingLabel(personalWeapon)}</span>
+    </div>
+    <div class="rating-row">
+      <span class="rating-label">מחסנית מלאה + פונדה</span>
+      <span class="rating-value" style="background-color: ${getRatingColor(fullMagazine)}">${getRatingLabel(fullMagazine)}</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">2. עמדת השמירה</div>
+    <div class="rating-row">
+      <span class="rating-label">קשר תקין / מכשיר טעון</span>
+      <span class="rating-value" style="background-color: ${getRatingColor(validCommunication)}">${getRatingLabel(validCommunication)}</span>
+    </div>
+    <div class="rating-row">
+      <span class="rating-label">שער כניסה תקין ופועל</span>
+      <span class="rating-value" style="background-color: ${getRatingColor(entranceGateOperational)}">${getRatingLabel(entranceGateOperational)}</span>
+    </div>
+    <div class="rating-row">
+      <span class="rating-label">יומן סריקות מלא ועדכני</span>
+      <span class="rating-value" style="background-color: ${getRatingColor(scanLogComplete)}">${getRatingLabel(scanLogComplete)}</span>
+    </div>
+    <div class="rating-row">
+      <span class="rating-label">חוברת נהלים נגישה בעמדה</span>
+      <span class="rating-value" style="background-color: ${getRatingColor(proceduresBooklet)}">${getRatingLabel(proceduresBooklet)}</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">3. נהלים והכרת השגרה</div>
+    ${selectedProcedures.length > 0 ? `
+    <p style="font-weight: 600; margin-bottom: 10px;">נהלים שנבדקו:</p>
+    ${selectedProcedures.map(p => `
+    <div class="procedure-item">
+      <div style="display: flex; justify-content: space-between;">
+        <span>${p.procedure}</span>
+        <span class="rating-value" style="background-color: ${getRatingColor(p.rating)}">${getRatingLabel(p.rating)}</span>
+      </div>
+    </div>
+    `).join('')}
+    ` : '<p style="color: #6B7280;">לא נבחרו נהלים</p>'}
+    <div class="rating-row" style="margin-top: 15px;">
+      <span class="rating-label">בקיאות בנהלי הכניסה למוסד</span>
+      <span class="rating-value" style="background-color: ${getRatingColor(entranceProcedures)}">${getRatingLabel(entranceProcedures)}</span>
+    </div>
+    <div class="rating-row">
+      <span class="rating-label">בדיקת היכרות רכז הביטחון + מנהל בית הספר</span>
+      <span class="rating-value" style="background-color: ${getRatingColor(securityOfficerKnowledge)}">${getRatingLabel(securityOfficerKnowledge)}</span>
+    </div>
+  </div>
+
+  ${inspectorNotes.trim() ? `
+  <div class="section">
+    <div class="section-title">הערות הקב"ט</div>
+    <div class="notes">
+      ${inspectorNotes.split('\n').map(line => `<p>${line}</p>`).join('')}
+    </div>
+  </div>
+  ` : ''}
+
+  <div class="score-summary">
+    <h2 style="text-align: center; color: #2563EB; margin-bottom: 20px;">סיכום ציונים</h2>
+    <div class="score-row">
+      <span>1. הופעה וציוד אישי:</span>
+      <strong>${scores.category1.toFixed(1)} / 28</strong>
+    </div>
+    <div class="score-row">
+      <span>2. עמדת השמירה:</span>
+      <strong>${scores.category2.toFixed(1)} / 28</strong>
+    </div>
+    <div class="score-row">
+      <span>3. נהלים והכרת השגרה:</span>
+      <strong>${scores.category3.toFixed(1)} / ${(14 + selectedProcedures.length * 30)}</strong>
+    </div>
+    <div class="score-row total-score">
+      <span>ציון כולל:</span>
+      <strong>${scores.total.toFixed(1)} / ${(56 + selectedProcedures.length * 30)} (${((scores.total / (56 + selectedProcedures.length * 30)) * 100).toFixed(1)}%)</strong>
+    </div>
+  </div>
+
+  <div class="signature-section">
+    <p><strong>חתימת המאבטח:</strong> ${guardSignature || '_______________'}</p>
+  </div>
+
+  <div class="date">
+    מסמך זה הופק ב-${new Date().toLocaleDateString('he-IL')} ${new Date().toLocaleTimeString('he-IL')}
+  </div>
+</body>
+</html>`;
+  };
+
+  const handleExport = async () => {
+    try {
+      const isAvailable = await Sharing.isAvailableAsync();
+      if (!isAvailable) {
+        Alert.alert('שגיאה', 'שיתוף קבצים אינו זמין במכשיר זה');
+        return;
+      }
+
+      const htmlContent = generateHTMLReport();
+      const fileName = `בקרה_${guard.firstName}_${guard.lastName}_${new Date().toISOString().split('T')[0]}.html`;
+      const file = new File(Paths.cache, fileName);
+      
+      file.write(htmlContent);
+
+      await Sharing.shareAsync(file.uri, {
+        mimeType: 'text/html',
+        dialogTitle: 'ייצוא טופס בקרה',
+        UTI: 'public.html',
+      });
+
+      Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+    } catch (error) {
+      console.error('Export error:', error);
+      Alert.alert('שגיאה', 'נכשל בייצוא הקובץ');
+    }
+  };
 
   const handleSubmit = async () => {
     if (!inspectorName.trim()) {
@@ -543,16 +833,26 @@ export default function InspectionScreen() {
             </View>
           </View>
 
-          <TouchableOpacity
-            style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
-            onPress={handleSubmit}
-            disabled={isSubmitting}
-          >
-            <CheckCircle2 size={20} color="#FFFFFF" />
-            <Text style={styles.submitButtonText}>
-              {isSubmitting ? 'שומר...' : 'שמור בקרה'}
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+              style={[styles.exportButton]}
+              onPress={handleExport}
+            >
+              <Download size={20} color="#2563EB" />
+              <Text style={styles.exportButtonText}>ייצוא לקובץ</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
+              onPress={handleSubmit}
+              disabled={isSubmitting}
+            >
+              <CheckCircle2 size={20} color="#FFFFFF" />
+              <Text style={styles.submitButtonText}>
+                {isSubmitting ? 'שומר...' : 'שמור בקרה'}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -718,6 +1018,31 @@ const styles = StyleSheet.create({
   textArea: {
     minHeight: 100,
   },
+  buttonsContainer: {
+    gap: 12,
+    marginTop: 8,
+  },
+  exportButton: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderWidth: 2,
+    borderColor: '#2563EB',
+    shadowColor: '#2563EB',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  exportButtonText: {
+    color: '#2563EB',
+    fontSize: 16,
+    fontWeight: '700' as const,
+  },
   submitButton: {
     flexDirection: 'row',
     backgroundColor: '#10B981',
@@ -725,7 +1050,6 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 8,
     gap: 8,
     shadowColor: '#10B981',
     shadowOffset: { width: 0, height: 4 },

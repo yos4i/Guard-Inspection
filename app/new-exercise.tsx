@@ -1101,6 +1101,7 @@ const styles = StyleSheet.create({
     fontWeight: '700' as const,
     color: '#1F2937',
     textAlign: 'right' as const,
+    flex: 1,
   },
   sectionScoreBadge: {
     backgroundColor: '#DC2626',

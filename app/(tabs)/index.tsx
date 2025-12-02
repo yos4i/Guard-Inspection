@@ -57,7 +57,8 @@ export default function GuardsScreen() {
       <Stack.Screen
         options={{
           title: 'מאבטחים',
-          headerRight: () => (
+          headerTitleAlign: 'left',
+          headerLeft: () => (
             <TouchableOpacity
               onPress={() => router.push('/add-guard')}
               style={styles.addButton}

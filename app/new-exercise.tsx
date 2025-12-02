@@ -327,14 +327,17 @@ export default function NewExerciseScreen() {
           return;
         }
 
-        const dataUri = `data:text/html;charset=utf-8,${encodeURIComponent(htmlContent)}`;
-        await Sharing.shareAsync(dataUri, {
-          mimeType: 'text/html',
-          dialogTitle: 'ייצוא דוח תרגיל',
-          UTI: 'public.html',
-        });
-
-        Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64data = reader.result as string;
+          await Sharing.shareAsync(base64data, {
+            mimeType: 'text/html',
+            dialogTitle: 'ייצוא דוח תרגיל',
+            UTI: 'public.html',
+          });
+        };
+        reader.readAsDataURL(blob);
       }
     } catch (error) {
       console.error('Export error:', error);

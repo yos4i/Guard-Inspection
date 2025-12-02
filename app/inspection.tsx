@@ -14,7 +14,6 @@ import { Stack, useRouter, useLocalSearchParams } from 'expo-router';
 import { useGuards } from '@/contexts/GuardsProvider';
 import { ClipboardCheck, CheckCircle2, Download } from 'lucide-react-native';
 import * as Sharing from 'expo-sharing';
-import { File, Paths } from 'expo-file-system';
 
 export default function InspectionScreen() {
   const router = useRouter();
@@ -462,17 +461,17 @@ export default function InspectionScreen() {
           return;
         }
 
-        const file = new File(Paths.cache, fileName);
-        file.create({ overwrite: true });
-        file.write(htmlContent);
-
-        await Sharing.shareAsync(file.uri, {
-          mimeType: 'text/html',
-          dialogTitle: 'ייצוא טופס בקרה',
-          UTI: 'public.html',
-        });
-
-        Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64data = reader.result as string;
+          await Sharing.shareAsync(base64data, {
+            mimeType: 'text/html',
+            dialogTitle: 'ייצוא טופס בקרה',
+            UTI: 'public.html',
+          });
+        };
+        reader.readAsDataURL(blob);
       }
     } catch (error) {
       console.error('Export error:', error);

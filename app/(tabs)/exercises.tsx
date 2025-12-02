@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
-import { Dumbbell, UserCircle, Timer } from 'lucide-react-native';
+import { Dumbbell, Timer } from 'lucide-react-native';
 import { useGuards, useSortedGuardsByExercise } from '@/contexts/GuardsProvider';
 
 export default function ExercisesScreen() {
@@ -88,22 +88,16 @@ export default function ExercisesScreen() {
                     <Text style={[styles.timerLabel, { color: timerColor }]}>ימים</Text>
                   </View>
                   <View style={styles.guardInfo}>
-                    <View style={styles.iconContainer}>
-                      <UserCircle size={40} color="#2563EB" strokeWidth={1.5} />
-                    </View>
-                    <View style={styles.guardDetails}>
-                      <Text style={styles.guardName}>
-                        {item.firstName} {item.lastName}
+                    <Text style={styles.guardName}>
+                      {item.firstName} {item.lastName}
+                    </Text>
+                    <Text style={styles.guardId}>ת.ז: {item.idNumber}</Text>
+                    {lastExercise && (
+                      <Text style={styles.lastExerciseText}>
+                        תרגיל אחרון:{' '}
+                        {new Date(lastExercise).toLocaleDateString('he-IL')}
                       </Text>
-                      <Text style={styles.guardId}>ת.ז: {item.idNumber}</Text>
-                      <Text style={styles.guardPhone}>טלפון: {item.phone}</Text>
-                      {lastExercise && (
-                        <Text style={styles.lastExerciseText}>
-                          תרגיל אחרון:{' '}
-                          {new Date(lastExercise).toLocaleDateString('he-IL')}
-                        </Text>
-                      )}
-                    </View>
+                    )}
                   </View>
                 </View>
 
@@ -185,32 +179,21 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     marginBottom: 12,
   },
   guardInfo: {
-    flexDirection: 'row',
     flex: 1,
-  },
-  iconContainer: {
-    marginLeft: 12,
-  },
-  guardDetails: {
-    flex: 1,
+    alignItems: 'flex-end',
   },
   guardName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600' as const,
     color: '#1F2937',
     marginBottom: 4,
   },
   guardId: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 2,
-  },
-  guardPhone: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#6B7280',
   },
   lastExerciseText: {

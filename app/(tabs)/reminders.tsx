@@ -6,10 +6,12 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useGuardReminders, useSortedGuardsByExercise, useGuards } from '@/contexts/GuardsProvider';
-import { Shield, Dumbbell, Timer } from 'lucide-react-native';
+import { Shield, Dumbbell, Timer, LogOut } from 'lucide-react-native';
+import { useAuth } from '@/contexts/AuthProvider';
 
 type CategoryType = 'guards' | 'exercises';
 
@@ -30,6 +32,29 @@ export default function RemindersScreen() {
   const sortedGuardsByExercise = useSortedGuardsByExercise();
   const { getLastExerciseDate } = useGuards();
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('guards');
+  const { logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    Alert.alert(
+      'יציאה מהמערכת',
+      'האם אתה בטוח שברצונך להתנתק?',
+      [
+        {
+          text: 'ביטול',
+          style: 'cancel',
+        },
+        {
+          text: 'יציאה',
+          style: 'destructive',
+          onPress: async () => {
+            await logout();
+            router.replace('/login');
+          },
+        },
+      ]
+    );
+  };
 
   const renderGuardsCategory = () => {
     if (reminders.length === 0) {
@@ -197,6 +222,19 @@ export default function RemindersScreen() {
       <Stack.Screen
         options={{
           title: 'תזכורות',
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={handleLogout}
+              style={{
+                marginRight: 16,
+                padding: 8,
+                borderRadius: 8,
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              }}
+            >
+              <LogOut size={22} color="#ef4444" />
+            </TouchableOpacity>
+          ),
         }}
       />
 

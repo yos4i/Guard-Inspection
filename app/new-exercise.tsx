@@ -307,25 +307,39 @@ export default function NewExerciseScreen() {
     if (!guard) return;
     
     try {
-      const isAvailable = await Sharing.isAvailableAsync();
-      if (!isAvailable) {
-        Alert.alert('שגיאה', 'שיתוף קבצים אינו זמין במכשיר זה');
-        return;
-      }
-
       const htmlContent = generateHTMLReport();
       const fileName = `תרגיל_${guard.firstName}_${guard.lastName}_${new Date().toISOString().split('T')[0]}.html`;
-      const file = new File(Paths.cache, fileName);
-      
-      file.write(htmlContent);
 
-      await Sharing.shareAsync(file.uri, {
-        mimeType: 'text/html',
-        dialogTitle: 'ייצוא דוח תרגיל',
-        UTI: 'public.html',
-      });
+      if (Platform.OS === 'web') {
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+      } else {
+        const isAvailable = await Sharing.isAvailableAsync();
+        if (!isAvailable) {
+          Alert.alert('שגיאה', 'שיתוף קבצים אינו זמין במכשיר זה');
+          return;
+        }
 
-      Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+        const file = new File(Paths.cache, fileName);
+        await file.create({ overwrite: true });
+        await file.write(htmlContent);
+
+        await Sharing.shareAsync(file.uri, {
+          mimeType: 'text/html',
+          dialogTitle: 'ייצוא דוח תרגיל',
+          UTI: 'public.html',
+        });
+
+        Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+      }
     } catch (error) {
       console.error('Export error:', error);
       Alert.alert('שגיאה', 'נכשל בייצוא הקובץ');

@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
-import { Dumbbell, Timer } from 'lucide-react-native';
+import { Dumbbell, Timer, UserCircle } from 'lucide-react-native';
 import { useGuards, useSortedGuardsByExercise } from '@/contexts/GuardsProvider';
 
 export default function ExercisesScreen() {
@@ -81,23 +81,28 @@ export default function ExercisesScreen() {
                       { backgroundColor: timerColor + '15', borderColor: timerColor },
                     ]}
                   >
-                    <Timer size={24} color={timerColor} strokeWidth={2.5} />
+                    <Timer size={20} color={timerColor} strokeWidth={2.5} />
                     <Text style={[styles.timerDays, { color: timerColor }]}>
                       {daysRemaining}
                     </Text>
                     <Text style={[styles.timerLabel, { color: timerColor }]}>ימים</Text>
                   </View>
                   <View style={styles.guardInfo}>
-                    <Text style={styles.guardName}>
-                      {item.firstName} {item.lastName}
-                    </Text>
-                    <Text style={styles.guardId}>ת.ז: {item.idNumber}</Text>
-                    {lastExercise && (
-                      <Text style={styles.lastExerciseText}>
-                        תרגיל אחרון:{' '}
-                        {new Date(lastExercise).toLocaleDateString('he-IL')}
+                    <View style={styles.iconContainer}>
+                      <UserCircle size={40} color="#2563EB" strokeWidth={1.5} />
+                    </View>
+                    <View style={styles.guardDetails}>
+                      <Text style={styles.guardName}>
+                        {item.firstName} {item.lastName}
                       </Text>
-                    )}
+                      <Text style={styles.guardId}>ת.ז: {item.idNumber}</Text>
+                      {lastExercise && (
+                        <Text style={styles.lastExerciseText}>
+                          תרגיל אחרון:{' '}
+                          {new Date(lastExercise).toLocaleDateString('he-IL')}
+                        </Text>
+                      )}
+                    </View>
                   </View>
                 </View>
 
@@ -183,6 +188,14 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   guardInfo: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  iconContainer: {
+    marginLeft: 12,
+  },
+  guardDetails: {
     flex: 1,
     alignItems: 'flex-end',
   },
@@ -204,21 +217,21 @@ const styles = StyleSheet.create({
   timerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 12,
     borderWidth: 2,
-    minWidth: 80,
+    minWidth: 70,
   },
   timerDays: {
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: '700' as const,
-    marginTop: 4,
+    marginTop: 2,
   },
   timerLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600' as const,
-    marginTop: 2,
+    marginTop: 1,
   },
   actionContainer: {
     alignItems: 'flex-end',

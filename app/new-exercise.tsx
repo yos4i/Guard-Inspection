@@ -328,8 +328,9 @@ export default function NewExerciseScreen() {
           return;
         }
 
-        const file = new File(Paths.document, fileName);
-        file.write(htmlContent);
+        const file = new File(Paths.cache, fileName);
+        await file.create({ overwrite: true });
+        await file.write(htmlContent);
 
         await Sharing.shareAsync(file.uri, {
           mimeType: 'text/html',

@@ -41,6 +41,13 @@ export default function NewExerciseScreen() {
   const [updatedKabtScore, setUpdatedKabtScore] = useState('10');
   const [updatedCoordinatorScore, setUpdatedCoordinatorScore] = useState('10');
   
+  const responseScore = [
+    parseInt(identifiedThreatScore) || 0,
+    parseInt(reportedOnRadioScore) || 0,
+    parseInt(updatedKabtScore) || 0,
+    parseInt(updatedCoordinatorScore) || 0,
+  ].reduce((sum, score) => sum + score, 0);
+  
   const [responseSpeed, setResponseSpeed] = useState<RatingLevel>('מצוין');
   const [situationControl, setSituationControl] = useState<RatingLevel>('מצוין');
   const [confidenceUnderPressure, setConfidenceUnderPressure] = useState<RatingLevel>('מצוין');
@@ -569,20 +576,28 @@ export default function NewExerciseScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>תגובת המאבטח</Text>
+            <View style={styles.sectionTitleContainer}>
+              <Text style={styles.sectionTitle}>תגובת המאבטח</Text>
+              <View style={styles.sectionScoreBadge}>
+                <Text style={styles.sectionScoreText}>{responseScore}/40</Text>
+              </View>
+            </View>
             <View style={styles.sectionContent}>
               <View style={styles.scoreItemContainer}>
-                <TouchableOpacity
-                  style={styles.checkboxRow}
-                  onPress={() => setIdentifiedThreat(!identifiedThreat)}
-                  activeOpacity={0.7}
-                >
-                  <View style={[styles.checkbox, identifiedThreat && styles.checkboxChecked]}>
-                    {identifiedThreat && <Text style={styles.checkmark}>✓</Text>}
-                  </View>
-                  <Text style={styles.checkboxLabel}>זיהוי האיום / חשוד</Text>
-                </TouchableOpacity>
+                <View style={styles.scoreItemHeader}>
+                  <TouchableOpacity
+                    style={styles.checkboxRow}
+                    onPress={() => setIdentifiedThreat(!identifiedThreat)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={[styles.checkbox, identifiedThreat && styles.checkboxChecked]}>
+                      {identifiedThreat && <Text style={styles.checkmark}>✓</Text>}
+                    </View>
+                    <Text style={styles.checkboxLabel}>זיהוי האיום / חשוד</Text>
+                  </TouchableOpacity>
+                </View>
                 <View style={styles.scoreInputContainer}>
+                  <Text style={styles.scoreInputLabel}>ניקוד:</Text>
                   <TextInput
                     style={styles.scoreInput}
                     value={identifiedThreatScore}
@@ -602,17 +617,20 @@ export default function NewExerciseScreen() {
               </View>
 
               <View style={styles.scoreItemContainer}>
-                <TouchableOpacity
-                  style={styles.checkboxRow}
-                  onPress={() => setReportedOnRadio(!reportedOnRadio)}
-                  activeOpacity={0.7}
-                >
-                  <View style={[styles.checkbox, reportedOnRadio && styles.checkboxChecked]}>
-                    {reportedOnRadio && <Text style={styles.checkmark}>✓</Text>}
-                  </View>
-                  <Text style={styles.checkboxLabel}>דיווח בקשר</Text>
-                </TouchableOpacity>
+                <View style={styles.scoreItemHeader}>
+                  <TouchableOpacity
+                    style={styles.checkboxRow}
+                    onPress={() => setReportedOnRadio(!reportedOnRadio)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={[styles.checkbox, reportedOnRadio && styles.checkboxChecked]}>
+                      {reportedOnRadio && <Text style={styles.checkmark}>✓</Text>}
+                    </View>
+                    <Text style={styles.checkboxLabel}>דיווח בקשר</Text>
+                  </TouchableOpacity>
+                </View>
                 <View style={styles.scoreInputContainer}>
+                  <Text style={styles.scoreInputLabel}>ניקוד:</Text>
                   <TextInput
                     style={styles.scoreInput}
                     value={reportedOnRadioScore}
@@ -632,17 +650,20 @@ export default function NewExerciseScreen() {
               </View>
 
               <View style={styles.scoreItemContainer}>
-                <TouchableOpacity
-                  style={styles.checkboxRow}
-                  onPress={() => setUpdatedKabt(!updatedKabt)}
-                  activeOpacity={0.7}
-                >
-                  <View style={[styles.checkbox, updatedKabt && styles.checkboxChecked]}>
-                    {updatedKabt && <Text style={styles.checkmark}>✓</Text>}
-                  </View>
-                  <Text style={styles.checkboxLabel}>עדכון קב&apos;ט</Text>
-                </TouchableOpacity>
+                <View style={styles.scoreItemHeader}>
+                  <TouchableOpacity
+                    style={styles.checkboxRow}
+                    onPress={() => setUpdatedKabt(!updatedKabt)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={[styles.checkbox, updatedKabt && styles.checkboxChecked]}>
+                      {updatedKabt && <Text style={styles.checkmark}>✓</Text>}
+                    </View>
+                    <Text style={styles.checkboxLabel}>עדכון קב&apos;ט</Text>
+                  </TouchableOpacity>
+                </View>
                 <View style={styles.scoreInputContainer}>
+                  <Text style={styles.scoreInputLabel}>ניקוד:</Text>
                   <TextInput
                     style={styles.scoreInput}
                     value={updatedKabtScore}
@@ -662,17 +683,20 @@ export default function NewExerciseScreen() {
               </View>
 
               <View style={styles.scoreItemContainer}>
-                <TouchableOpacity
-                  style={styles.checkboxRow}
-                  onPress={() => setUpdatedCoordinator(!updatedCoordinator)}
-                  activeOpacity={0.7}
-                >
-                  <View style={[styles.checkbox, updatedCoordinator && styles.checkboxChecked]}>
-                    {updatedCoordinator && <Text style={styles.checkmark}>✓</Text>}
-                  </View>
-                  <Text style={styles.checkboxLabel}>עדכון רכז ביטחון / מנהל</Text>
-                </TouchableOpacity>
+                <View style={styles.scoreItemHeader}>
+                  <TouchableOpacity
+                    style={styles.checkboxRow}
+                    onPress={() => setUpdatedCoordinator(!updatedCoordinator)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={[styles.checkbox, updatedCoordinator && styles.checkboxChecked]}>
+                      {updatedCoordinator && <Text style={styles.checkmark}>✓</Text>}
+                    </View>
+                    <Text style={styles.checkboxLabel}>עדכון רכז ביטחון / מנהל</Text>
+                  </TouchableOpacity>
+                </View>
                 <View style={styles.scoreInputContainer}>
+                  <Text style={styles.scoreInputLabel}>ניקוד:</Text>
                   <TextInput
                     style={styles.scoreInput}
                     value={updatedCoordinatorScore}
@@ -1058,14 +1082,30 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '700' as const,
-    color: '#1F2937',
+  sectionTitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     backgroundColor: '#F9FAFB',
     padding: 14,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '700' as const,
+    color: '#1F2937',
+  },
+  sectionScoreBadge: {
+    backgroundColor: '#DC2626',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  sectionScoreText: {
+    fontSize: 14,
+    fontWeight: '700' as const,
+    color: '#FFFFFF',
   },
   sectionContent: {
     padding: 14,
@@ -1152,11 +1192,27 @@ const styles = StyleSheet.create({
   },
   scoreItemContainer: {
     gap: 8,
+    backgroundColor: '#FAFAFA',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  scoreItemHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   scoreInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    paddingRight: 36,
+  },
+  scoreInputLabel: {
+    fontSize: 13,
+    fontWeight: '600' as const,
+    color: '#6B7280',
   },
   scoreInput: {
     backgroundColor: '#FFFFFF',

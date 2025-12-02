@@ -572,10 +572,10 @@ export default function NewExerciseScreen() {
 
           <View style={styles.section}>
             <View style={styles.sectionTitleContainer}>
-              <Text style={styles.sectionTitle}>תגובת המאבטח</Text>
               <View style={styles.sectionScoreBadge}>
                 <Text style={styles.sectionScoreText}>{responseScore}/40</Text>
               </View>
+              <Text style={styles.sectionTitle}>תגובת המאבטח</Text>
             </View>
             <View style={styles.sectionContent}>
               <View style={styles.ratingGroup}>

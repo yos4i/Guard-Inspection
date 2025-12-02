@@ -14,6 +14,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useGuards } from '@/contexts/GuardsProvider';
 import { Dumbbell, Download } from 'lucide-react-native';
 import * as Sharing from 'expo-sharing';
+import { File, Paths } from 'expo-file-system';
 
 type ExerciseTypeOption = 'כניסה בכיסוי' | 'חפץ חשוד' | 'אדם חשוד' | 'אחר';
 type RatingLevel = 'מצוין' | 'טוב' | 'צריך שיפור';
@@ -321,7 +322,6 @@ export default function NewExerciseScreen() {
         URL.revokeObjectURL(url);
         Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
       } else {
-        const { Paths, File } = await import('expo-file-system');
         const isAvailable = await Sharing.isAvailableAsync();
         if (!isAvailable) {
           Alert.alert('שגיאה', 'שיתוף קבצים אינו זמין במכשיר זה');
@@ -329,10 +329,9 @@ export default function NewExerciseScreen() {
         }
 
         const file = new File(Paths.document, fileName);
-        await file.write(htmlContent);
-        const fileUri = file.uri;
+        file.write(htmlContent);
 
-        await Sharing.shareAsync(fileUri, {
+        await Sharing.shareAsync(file.uri, {
           mimeType: 'text/html',
           dialogTitle: 'ייצוא דוח תרגיל',
           UTI: 'public.html',

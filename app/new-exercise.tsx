@@ -31,21 +31,24 @@ export default function NewExerciseScreen() {
   const [otherExerciseType, setOtherExerciseType] = useState('');
   const [scenarioDescription, setScenarioDescription] = useState('');
   
-  const [identifiedThreat, setIdentifiedThreat] = useState(false);
-  const [reportedOnRadio, setReportedOnRadio] = useState(false);
-  const [updatedKabt, setUpdatedKabt] = useState(false);
-  const [updatedCoordinator, setUpdatedCoordinator] = useState(false);
-  
-  const [identifiedThreatScore, setIdentifiedThreatScore] = useState('10');
-  const [reportedOnRadioScore, setReportedOnRadioScore] = useState('10');
-  const [updatedKabtScore, setUpdatedKabtScore] = useState('10');
-  const [updatedCoordinatorScore, setUpdatedCoordinatorScore] = useState('10');
+  const getRatingScore = (level: RatingLevel): string => {
+    switch (level) {
+      case 'מצוין': return '10';
+      case 'טוב': return '5';
+      case 'צריך שיפור': return '0';
+    }
+  };
+
+  const [identifiedThreat, setIdentifiedThreat] = useState<RatingLevel>('מצוין');
+  const [reportedOnRadio, setReportedOnRadio] = useState<RatingLevel>('מצוין');
+  const [updatedKabt, setUpdatedKabt] = useState<RatingLevel>('מצוין');
+  const [updatedCoordinator, setUpdatedCoordinator] = useState<RatingLevel>('מצוין');
   
   const responseScore = [
-    parseInt(identifiedThreatScore) || 0,
-    parseInt(reportedOnRadioScore) || 0,
-    parseInt(updatedKabtScore) || 0,
-    parseInt(updatedCoordinatorScore) || 0,
+    parseInt(getRatingScore(identifiedThreat)),
+    parseInt(getRatingScore(reportedOnRadio)),
+    parseInt(getRatingScore(updatedKabt)),
+    parseInt(getRatingScore(updatedCoordinator)),
   ].reduce((sum, score) => sum + score, 0);
   
   const [responseSpeed, setResponseSpeed] = useState<RatingLevel>('מצוין');
@@ -55,14 +58,6 @@ export default function NewExerciseScreen() {
   
   const [kabtEvaluation, setKabtEvaluation] = useState('20');
   
-  const getRatingScore = (level: RatingLevel): string => {
-    switch (level) {
-      case 'מצוין': return '10';
-      case 'טוב': return '5';
-      case 'צריך שיפור': return '0';
-    }
-  };
-  
   const [toMaintain, setToMaintain] = useState('');
   const [toImprove, setToImprove] = useState('');
   const [additionalNotes, setAdditionalNotes] = useState('');
@@ -71,10 +66,10 @@ export default function NewExerciseScreen() {
 
   const calculateTotalScore = (): number => {
     const responseScore = [
-      parseInt(identifiedThreatScore) || 0,
-      parseInt(reportedOnRadioScore) || 0,
-      parseInt(updatedKabtScore) || 0,
-      parseInt(updatedCoordinatorScore) || 0,
+      parseInt(getRatingScore(identifiedThreat)),
+      parseInt(getRatingScore(reportedOnRadio)),
+      parseInt(getRatingScore(updatedKabt)),
+      parseInt(getRatingScore(updatedCoordinator)),
     ].reduce((sum, score) => sum + score, 0);
 
     const evaluationScore = [
@@ -250,21 +245,21 @@ export default function NewExerciseScreen() {
 
   <div class="section">
     <div class="section-title">תגובת המאבטח</div>
-    <div class="checkbox-item">
-      <div class="checkbox ${identifiedThreat ? 'checked' : ''}">${identifiedThreat ? '✓' : ''}</div>
-      <span>זיהוי האיום / חשוד - ${identifiedThreatScore} נק'</span>
+    <div class="info-row">
+      <span class="info-label">זיהוי האיום / חשוד:</span>
+      <span class="info-value">${identifiedThreat} (${getRatingScore(identifiedThreat)} נק')</span>
     </div>
-    <div class="checkbox-item">
-      <div class="checkbox ${reportedOnRadio ? 'checked' : ''}">${reportedOnRadio ? '✓' : ''}</div>
-      <span>דיווח בקשר - ${reportedOnRadioScore} נק'</span>
+    <div class="info-row">
+      <span class="info-label">דיווח בקשר:</span>
+      <span class="info-value">${reportedOnRadio} (${getRatingScore(reportedOnRadio)} נק')</span>
     </div>
-    <div class="checkbox-item">
-      <div class="checkbox ${updatedKabt ? 'checked' : ''}">${updatedKabt ? '✓' : ''}</div>
-      <span>עדכון קב"ט - ${updatedKabtScore} נק'</span>
+    <div class="info-row">
+      <span class="info-label">עדכון קב"ט:</span>
+      <span class="info-value">${updatedKabt} (${getRatingScore(updatedKabt)} נק')</span>
     </div>
-    <div class="checkbox-item">
-      <div class="checkbox ${updatedCoordinator ? 'checked' : ''}">${updatedCoordinator ? '✓' : ''}</div>
-      <span>עדכון רכז ביטחון / מנהל - ${updatedCoordinatorScore} נק'</span>
+    <div class="info-row">
+      <span class="info-label">עדכון רכז ביטחון / מנהל:</span>
+      <span class="info-value">${updatedCoordinator} (${getRatingScore(updatedCoordinator)} נק')</span>
     </div>
   </div>
 
@@ -325,10 +320,10 @@ export default function NewExerciseScreen() {
     <div class="score-row">
       <span>תגובת המאבטח:</span>
       <strong>${[
-        parseInt(identifiedThreatScore) || 0,
-        parseInt(reportedOnRadioScore) || 0,
-        parseInt(updatedKabtScore) || 0,
-        parseInt(updatedCoordinatorScore) || 0,
+        parseInt(getRatingScore(identifiedThreat)),
+        parseInt(getRatingScore(reportedOnRadio)),
+        parseInt(getRatingScore(updatedKabt)),
+        parseInt(getRatingScore(updatedCoordinator)),
       ].reduce((sum, score) => sum + score, 0)} / 40 נק'</strong>
     </div>
     <div class="score-row">
@@ -433,10 +428,10 @@ export default function NewExerciseScreen() {
         reportedOnRadio,
         updatedKabt,
         updatedCoordinator,
-        identifiedThreatScore: parseInt(identifiedThreatScore) || 0,
-        reportedOnRadioScore: parseInt(reportedOnRadioScore) || 0,
-        updatedKabtScore: parseInt(updatedKabtScore) || 0,
-        updatedCoordinatorScore: parseInt(updatedCoordinatorScore) || 0,
+        identifiedThreatScore: parseInt(getRatingScore(identifiedThreat)),
+        reportedOnRadioScore: parseInt(getRatingScore(reportedOnRadio)),
+        updatedKabtScore: parseInt(getRatingScore(updatedKabt)),
+        updatedCoordinatorScore: parseInt(getRatingScore(updatedCoordinator)),
         responseSpeed,
         situationControl,
         confidenceUnderPressure,
@@ -583,135 +578,143 @@ export default function NewExerciseScreen() {
               </View>
             </View>
             <View style={styles.sectionContent}>
-              <View style={styles.scoreItemContainer}>
-                <View style={styles.scoreItemHeader}>
-                  <TouchableOpacity
-                    style={styles.checkboxRow}
-                    onPress={() => setIdentifiedThreat(!identifiedThreat)}
-                    activeOpacity={0.7}
-                  >
-                    <View style={[styles.checkbox, identifiedThreat && styles.checkboxChecked]}>
-                      {identifiedThreat && <Text style={styles.checkmark}>✓</Text>}
-                    </View>
-                    <Text style={styles.checkboxLabel}>זיהוי האיום / חשוד</Text>
-                  </TouchableOpacity>
+              <View style={styles.ratingGroup}>
+                <View style={styles.ratingHeader}>
+                  <Text style={styles.ratingLabel}>זיהוי האיום / חשוד</Text>
+                  <View style={styles.scoreDisplay}>
+                    <Text style={styles.scoreDisplayText}>{getRatingScore(identifiedThreat)}</Text>
+                    <Text style={styles.scoreLabel}>נק&apos;</Text>
+                  </View>
                 </View>
-                <View style={styles.scoreInputContainer}>
-                  <Text style={styles.scoreInputLabel}>ניקוד:</Text>
-                  <TextInput
-                    style={styles.scoreInput}
-                    value={identifiedThreatScore}
-                    onChangeText={(text) => {
-                      const num = text.replace(/[^0-9]/g, '');
-                      if (num === '' || (parseInt(num) >= 0 && parseInt(num) <= 10)) {
-                        setIdentifiedThreatScore(num);
-                      }
-                    }}
-                    keyboardType="number-pad"
-                    maxLength={2}
-                    placeholder="10"
-                    placeholderTextColor="#9CA3AF"
-                  />
-                  <Text style={styles.scoreLabel}>נק&apos;</Text>
-                </View>
-              </View>
-
-              <View style={styles.scoreItemContainer}>
-                <View style={styles.scoreItemHeader}>
-                  <TouchableOpacity
-                    style={styles.checkboxRow}
-                    onPress={() => setReportedOnRadio(!reportedOnRadio)}
-                    activeOpacity={0.7}
-                  >
-                    <View style={[styles.checkbox, reportedOnRadio && styles.checkboxChecked]}>
-                      {reportedOnRadio && <Text style={styles.checkmark}>✓</Text>}
-                    </View>
-                    <Text style={styles.checkboxLabel}>דיווח בקשר</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.scoreInputContainer}>
-                  <Text style={styles.scoreInputLabel}>ניקוד:</Text>
-                  <TextInput
-                    style={styles.scoreInput}
-                    value={reportedOnRadioScore}
-                    onChangeText={(text) => {
-                      const num = text.replace(/[^0-9]/g, '');
-                      if (num === '' || (parseInt(num) >= 0 && parseInt(num) <= 10)) {
-                        setReportedOnRadioScore(num);
-                      }
-                    }}
-                    keyboardType="number-pad"
-                    maxLength={2}
-                    placeholder="10"
-                    placeholderTextColor="#9CA3AF"
-                  />
-                  <Text style={styles.scoreLabel}>נק&apos;</Text>
+                <View style={styles.ratingButtons}>
+                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
+                    <TouchableOpacity
+                      key={level}
+                      style={[
+                        styles.ratingButton,
+                        level === 'מצוין' && styles.ratingButtonExcellent,
+                        level === 'טוב' && styles.ratingButtonGood,
+                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
+                        identifiedThreat === level && styles.ratingButtonActive,
+                      ]}
+                      onPress={() => setIdentifiedThreat(level)}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.ratingButtonText,
+                          identifiedThreat === level && styles.ratingButtonTextActive,
+                        ]}
+                      >
+                        {level}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
 
-              <View style={styles.scoreItemContainer}>
-                <View style={styles.scoreItemHeader}>
-                  <TouchableOpacity
-                    style={styles.checkboxRow}
-                    onPress={() => setUpdatedKabt(!updatedKabt)}
-                    activeOpacity={0.7}
-                  >
-                    <View style={[styles.checkbox, updatedKabt && styles.checkboxChecked]}>
-                      {updatedKabt && <Text style={styles.checkmark}>✓</Text>}
-                    </View>
-                    <Text style={styles.checkboxLabel}>עדכון קב&apos;ט</Text>
-                  </TouchableOpacity>
+              <View style={styles.ratingGroup}>
+                <View style={styles.ratingHeader}>
+                  <Text style={styles.ratingLabel}>דיווח בקשר</Text>
+                  <View style={styles.scoreDisplay}>
+                    <Text style={styles.scoreDisplayText}>{getRatingScore(reportedOnRadio)}</Text>
+                    <Text style={styles.scoreLabel}>נק&apos;</Text>
+                  </View>
                 </View>
-                <View style={styles.scoreInputContainer}>
-                  <Text style={styles.scoreInputLabel}>ניקוד:</Text>
-                  <TextInput
-                    style={styles.scoreInput}
-                    value={updatedKabtScore}
-                    onChangeText={(text) => {
-                      const num = text.replace(/[^0-9]/g, '');
-                      if (num === '' || (parseInt(num) >= 0 && parseInt(num) <= 10)) {
-                        setUpdatedKabtScore(num);
-                      }
-                    }}
-                    keyboardType="number-pad"
-                    maxLength={2}
-                    placeholder="10"
-                    placeholderTextColor="#9CA3AF"
-                  />
-                  <Text style={styles.scoreLabel}>נק&apos;</Text>
+                <View style={styles.ratingButtons}>
+                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
+                    <TouchableOpacity
+                      key={level}
+                      style={[
+                        styles.ratingButton,
+                        level === 'מצוין' && styles.ratingButtonExcellent,
+                        level === 'טוב' && styles.ratingButtonGood,
+                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
+                        reportedOnRadio === level && styles.ratingButtonActive,
+                      ]}
+                      onPress={() => setReportedOnRadio(level)}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.ratingButtonText,
+                          reportedOnRadio === level && styles.ratingButtonTextActive,
+                        ]}
+                      >
+                        {level}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
 
-              <View style={styles.scoreItemContainer}>
-                <View style={styles.scoreItemHeader}>
-                  <TouchableOpacity
-                    style={styles.checkboxRow}
-                    onPress={() => setUpdatedCoordinator(!updatedCoordinator)}
-                    activeOpacity={0.7}
-                  >
-                    <View style={[styles.checkbox, updatedCoordinator && styles.checkboxChecked]}>
-                      {updatedCoordinator && <Text style={styles.checkmark}>✓</Text>}
-                    </View>
-                    <Text style={styles.checkboxLabel}>עדכון רכז ביטחון / מנהל</Text>
-                  </TouchableOpacity>
+              <View style={styles.ratingGroup}>
+                <View style={styles.ratingHeader}>
+                  <Text style={styles.ratingLabel}>עדכון קב&apos;ט</Text>
+                  <View style={styles.scoreDisplay}>
+                    <Text style={styles.scoreDisplayText}>{getRatingScore(updatedKabt)}</Text>
+                    <Text style={styles.scoreLabel}>נק&apos;</Text>
+                  </View>
                 </View>
-                <View style={styles.scoreInputContainer}>
-                  <Text style={styles.scoreInputLabel}>ניקוד:</Text>
-                  <TextInput
-                    style={styles.scoreInput}
-                    value={updatedCoordinatorScore}
-                    onChangeText={(text) => {
-                      const num = text.replace(/[^0-9]/g, '');
-                      if (num === '' || (parseInt(num) >= 0 && parseInt(num) <= 10)) {
-                        setUpdatedCoordinatorScore(num);
-                      }
-                    }}
-                    keyboardType="number-pad"
-                    maxLength={2}
-                    placeholder="10"
-                    placeholderTextColor="#9CA3AF"
-                  />
-                  <Text style={styles.scoreLabel}>נק&apos;</Text>
+                <View style={styles.ratingButtons}>
+                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
+                    <TouchableOpacity
+                      key={level}
+                      style={[
+                        styles.ratingButton,
+                        level === 'מצוין' && styles.ratingButtonExcellent,
+                        level === 'טוב' && styles.ratingButtonGood,
+                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
+                        updatedKabt === level && styles.ratingButtonActive,
+                      ]}
+                      onPress={() => setUpdatedKabt(level)}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.ratingButtonText,
+                          updatedKabt === level && styles.ratingButtonTextActive,
+                        ]}
+                      >
+                        {level}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              <View style={styles.ratingGroup}>
+                <View style={styles.ratingHeader}>
+                  <Text style={styles.ratingLabel}>עדכון רכז ביטחון / מנהל</Text>
+                  <View style={styles.scoreDisplay}>
+                    <Text style={styles.scoreDisplayText}>{getRatingScore(updatedCoordinator)}</Text>
+                    <Text style={styles.scoreLabel}>נק&apos;</Text>
+                  </View>
+                </View>
+                <View style={styles.ratingButtons}>
+                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
+                    <TouchableOpacity
+                      key={level}
+                      style={[
+                        styles.ratingButton,
+                        level === 'מצוין' && styles.ratingButtonExcellent,
+                        level === 'טוב' && styles.ratingButtonGood,
+                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
+                        updatedCoordinator === level && styles.ratingButtonActive,
+                      ]}
+                      onPress={() => setUpdatedCoordinator(level)}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.ratingButtonText,
+                          updatedCoordinator === level && styles.ratingButtonTextActive,
+                        ]}
+                      >
+                        {level}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
             </View>
@@ -962,10 +965,10 @@ export default function NewExerciseScreen() {
                   <View style={styles.totalScoreValue}>
                     <Text style={styles.totalScoreNumber}>
                       {[
-                        parseInt(identifiedThreatScore) || 0,
-                        parseInt(reportedOnRadioScore) || 0,
-                        parseInt(updatedKabtScore) || 0,
-                        parseInt(updatedCoordinatorScore) || 0,
+                        parseInt(getRatingScore(identifiedThreat)),
+                        parseInt(getRatingScore(reportedOnRadio)),
+                        parseInt(getRatingScore(updatedKabt)),
+                        parseInt(getRatingScore(updatedCoordinator)),
                       ].reduce((sum, score) => sum + score, 0)}
                     </Text>
                     <Text style={styles.totalScoreText}>מתוך 40 נק&apos;</Text>

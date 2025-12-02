@@ -45,10 +45,10 @@ export interface Exercise {
   instructorName: string;
   exerciseType: string;
   scenarioDescription: string;
-  identifiedThreat: boolean;
-  reportedOnRadio: boolean;
-  updatedKabt: boolean;
-  updatedCoordinator: boolean;
+  identifiedThreat: string;
+  reportedOnRadio: string;
+  updatedKabt: string;
+  updatedCoordinator: string;
   identifiedThreatScore: number;
   reportedOnRadioScore: number;
   updatedKabtScore: number;

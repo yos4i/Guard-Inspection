@@ -495,7 +495,9 @@ export default function NewExerciseScreen() {
 
         <View style={styles.form}>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>פרטי התרגיל</Text>
+            <View style={styles.sectionTitleContainer}>
+              <Text style={styles.sectionTitle}>פרטי התרגיל</Text>
+            </View>
             <View style={styles.sectionContent}>
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>שם הקב&apos;ט המתרגל *</Text>
@@ -711,7 +713,9 @@ export default function NewExerciseScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>הערכת מקצועית</Text>
+            <View style={styles.sectionTitleContainer}>
+              <Text style={styles.sectionTitle}>הערכת מקצועית</Text>
+            </View>
             <View style={styles.sectionContent}>
               <View style={styles.ratingGroup}>
                 <View style={styles.ratingHeader}>
@@ -856,7 +860,9 @@ export default function NewExerciseScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>הערכת קב&apos;ט</Text>
+            <View style={styles.sectionTitleContainer}>
+              <Text style={styles.sectionTitle}>הערכת קב&apos;ט</Text>
+            </View>
             <View style={styles.sectionContent}>
               <View style={styles.kabtEvaluationContainer}>
                 <View style={styles.kabtEvaluationHeader}>
@@ -884,7 +890,9 @@ export default function NewExerciseScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>סיכום קב&apos;ט</Text>
+            <View style={styles.sectionTitleContainer}>
+              <Text style={styles.sectionTitle}>סיכום קב&apos;ט</Text>
+            </View>
             <View style={styles.sectionContent}>
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>לשימור</Text>
@@ -931,7 +939,9 @@ export default function NewExerciseScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>חתימה</Text>
+            <View style={styles.sectionTitleContainer}>
+              <Text style={styles.sectionTitle}>חתימה</Text>
+            </View>
             <View style={styles.sectionContent}>
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>חתימת המאבטח</Text>
@@ -947,7 +957,9 @@ export default function NewExerciseScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>סיכום ציונים</Text>
+            <View style={styles.sectionTitleContainer}>
+              <Text style={styles.sectionTitle}>סיכום ציונים</Text>
+            </View>
             <View style={styles.sectionContent}>
               <View style={styles.totalScoreContainer}>
                 <View style={styles.totalScoreRow}>

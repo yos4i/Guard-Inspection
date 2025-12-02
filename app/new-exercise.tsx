@@ -12,7 +12,9 @@ import {
 } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useGuards } from '@/contexts/GuardsProvider';
-import { Dumbbell } from 'lucide-react-native';
+import { Dumbbell, Download } from 'lucide-react-native';
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
 
 type ExerciseTypeOption = 'כניסה בכיסוי' | 'חפץ חשוד' | 'אדם חשוד' | 'אחר';
 type RatingLevel = 'מצוין' | 'טוב' | 'צריך שיפור';
@@ -78,6 +80,322 @@ export default function NewExerciseScreen() {
     const kabtScore = parseInt(kabtEvaluation) || 0;
 
     return responseScore + evaluationScore + kabtScore;
+  };
+
+  const generateHTMLReport = () => {
+    if (!guard) return '';
+    const finalExerciseType = exerciseType === 'אחר' ? otherExerciseType : exerciseType;
+
+    return `<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>דו"ח תרגיל - ${guard.firstName} ${guard.lastName}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f9fafb;
+    }
+    .header {
+      text-align: center;
+      background-color: #DC2626;
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      margin: 0 0 15px 0;
+      font-size: 28px;
+    }
+    .guard-info {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .guard-info h2 {
+      margin: 0 0 10px 0;
+      color: #1F2937;
+    }
+    .section {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #DC2626;
+      border-bottom: 2px solid #DC2626;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .info-row {
+      display: flex;
+      padding: 12px 0;
+      border-bottom: 1px solid #E5E7EB;
+    }
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    .info-label {
+      font-weight: 600;
+      color: #6B7280;
+      width: 220px;
+      flex-shrink: 0;
+    }
+    .info-value {
+      color: #1F2937;
+      flex: 1;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+    }
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #DC2626;
+      border-radius: 4px;
+      margin-left: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .checkbox.checked {
+      background-color: #DC2626;
+      color: white;
+    }
+    .score-summary {
+      background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+      padding: 25px;
+      border-radius: 12px;
+      margin-top: 30px;
+      border: 2px solid #DC2626;
+    }
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 16px;
+    }
+    .total-score {
+      font-size: 26px;
+      font-weight: bold;
+      color: #DC2626;
+      border-top: 2px solid #DC2626;
+      padding-top: 15px;
+      margin-top: 15px;
+      text-align: center;
+    }
+    .signature-section {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #F9FAFB;
+      border-radius: 8px;
+    }
+    .date {
+      text-align: center;
+      color: #6B7280;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>דו"ח תרגיל מאבטח</h1>
+  </div>
+
+  <div class="guard-info">
+    <h2>${guard.firstName} ${guard.lastName}</h2>
+    <p><strong>ת.ז:</strong> ${guard.idNumber}</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">פרטי התרגיל</div>
+    <div class="info-row">
+      <span class="info-label">שם הקב"ט המתרגל:</span>
+      <span class="info-value">${instructorName}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">סוג התרגיל:</span>
+      <span class="info-value">${finalExerciseType}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">תאריך:</span>
+      <span class="info-value">${new Date().toLocaleDateString('he-IL')}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">תיאור התרחיש:</span>
+      <span class="info-value">${scenarioDescription}</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">תגובת המאבטח</div>
+    <div class="checkbox-item">
+      <div class="checkbox ${identifiedThreat ? 'checked' : ''}">${identifiedThreat ? '✓' : ''}</div>
+      <span>זיהוי האיום / חשוד - ${identifiedThreatScore} נק'</span>
+    </div>
+    <div class="checkbox-item">
+      <div class="checkbox ${reportedOnRadio ? 'checked' : ''}">${reportedOnRadio ? '✓' : ''}</div>
+      <span>דיווח בקשר - ${reportedOnRadioScore} נק'</span>
+    </div>
+    <div class="checkbox-item">
+      <div class="checkbox ${updatedKabt ? 'checked' : ''}">${updatedKabt ? '✓' : ''}</div>
+      <span>עדכון קב"ט - ${updatedKabtScore} נק'</span>
+    </div>
+    <div class="checkbox-item">
+      <div class="checkbox ${updatedCoordinator ? 'checked' : ''}">${updatedCoordinator ? '✓' : ''}</div>
+      <span>עדכון רכז ביטחון / מנהל - ${updatedCoordinatorScore} נק'</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">הערכה מקצועית</div>
+    <div class="info-row">
+      <span class="info-label">מהירות תגובה:</span>
+      <span class="info-value">${responseSpeed} (${getRatingScore(responseSpeed)} נק')</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">רמת שליטה במצב:</span>
+      <span class="info-value">${situationControl} (${getRatingScore(situationControl)} נק')</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">ביטחון המאבטח ועמידה בלחץ:</span>
+      <span class="info-value">${confidenceUnderPressure} (${getRatingScore(confidenceUnderPressure)} נק')</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">עבד על פי נוהל:</span>
+      <span class="info-value">${workedByProcedure} (${getRatingScore(workedByProcedure)} נק')</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">הערכת קב"ט</div>
+    <div class="info-row">
+      <span class="info-label">ציון הערכת קב"ט:</span>
+      <span class="info-value">${kabtEvaluation} מתוך 20 נק'</span>
+    </div>
+  </div>
+
+  ${toMaintain.trim() || toImprove.trim() || additionalNotes.trim() ? `
+  <div class="section">
+    <div class="section-title">סיכום קב"ט</div>
+    ${toMaintain.trim() ? `
+    <div class="info-row">
+      <span class="info-label">לשימור:</span>
+      <span class="info-value">${toMaintain}</span>
+    </div>
+    ` : ''}
+    ${toImprove.trim() ? `
+    <div class="info-row">
+      <span class="info-label">לשיפור:</span>
+      <span class="info-value">${toImprove}</span>
+    </div>
+    ` : ''}
+    ${additionalNotes.trim() ? `
+    <div class="info-row">
+      <span class="info-label">הערות נוספות:</span>
+      <span class="info-value">${additionalNotes}</span>
+    </div>
+    ` : ''}
+  </div>
+  ` : ''}
+
+  <div class="score-summary">
+    <h2 style="text-align: center; color: #DC2626; margin-bottom: 20px;">סיכום ציונים</h2>
+    <div class="score-row">
+      <span>תגובת המאבטח:</span>
+      <strong>${[
+        parseInt(identifiedThreatScore) || 0,
+        parseInt(reportedOnRadioScore) || 0,
+        parseInt(updatedKabtScore) || 0,
+        parseInt(updatedCoordinatorScore) || 0,
+      ].reduce((sum, score) => sum + score, 0)} / 40 נק'</strong>
+    </div>
+    <div class="score-row">
+      <span>הערכה מקצועית:</span>
+      <strong>${[
+        parseInt(getRatingScore(responseSpeed)),
+        parseInt(getRatingScore(situationControl)),
+        parseInt(getRatingScore(confidenceUnderPressure)),
+        parseInt(getRatingScore(workedByProcedure)),
+      ].reduce((sum, score) => sum + score, 0)} / 40 נק'</strong>
+    </div>
+    <div class="score-row">
+      <span>הערכת קב"ט:</span>
+      <strong>${parseInt(kabtEvaluation) || 0} / 20 נק'</strong>
+    </div>
+    <div class="total-score">
+      ציון סופי: ${calculateTotalScore()} / 100 נק'
+    </div>
+  </div>
+
+  ${guardSignature.trim() ? `
+  <div class="signature-section">
+    <p><strong>חתימת המאבטח:</strong> ${guardSignature}</p>
+  </div>
+  ` : ''}
+
+  <div class="date">
+    מסמך זה הופק ב-${new Date().toLocaleDateString('he-IL')} ${new Date().toLocaleTimeString('he-IL')}
+  </div>
+</body>
+</html>`;
+  };
+
+  const handleExport = async () => {
+    if (!guard) return;
+    try {
+      const htmlContent = generateHTMLReport();
+      const fileName = `תרגיל_${guard.firstName}_${guard.lastName}_${new Date().toISOString().split('T')[0]}.html`;
+
+      if (Platform.OS === 'web') {
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+      } else {
+        const isAvailable = await Sharing.isAvailableAsync();
+        if (!isAvailable) {
+          Alert.alert('שגיאה', 'שיתוף קבצים אינו זמין במכשיר זה');
+          return;
+        }
+
+        const fsAny = FileSystem as any;
+        if (!fsAny.documentDirectory) {
+          throw new Error('Document directory not available');
+        }
+        const fileUri = fsAny.documentDirectory + fileName;
+        await fsAny.writeAsStringAsync(fileUri, htmlContent);
+
+        await Sharing.shareAsync(fileUri, {
+          mimeType: 'text/html',
+          dialogTitle: 'ייצוא דוח תרגיל',
+          UTI: 'public.html',
+        });
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      Alert.alert('שגיאה', 'נכשל בייצוא הקובץ');
+    }
   };
 
   const handleSubmit = async () => {
@@ -541,7 +859,7 @@ export default function NewExerciseScreen() {
                       placeholder="20"
                       placeholderTextColor="#9CA3AF"
                     />
-                    <Text style={styles.kabtEvaluationScoreText}>מתוך 20 נק'</Text>
+                    <Text style={styles.kabtEvaluationScoreText}>מתוך 20 נק&apos;</Text>
                   </View>
                 </View>
               </View>
@@ -626,7 +944,7 @@ export default function NewExerciseScreen() {
                         parseInt(updatedCoordinatorScore) || 0,
                       ].reduce((sum, score) => sum + score, 0)}
                     </Text>
-                    <Text style={styles.totalScoreText}>מתוך 40 נק'</Text>
+                    <Text style={styles.totalScoreText}>מתוך 40 נק&apos;</Text>
                   </View>
                 </View>
 
@@ -641,7 +959,7 @@ export default function NewExerciseScreen() {
                         parseInt(getRatingScore(workedByProcedure)),
                       ].reduce((sum, score) => sum + score, 0)}
                     </Text>
-                    <Text style={styles.totalScoreText}>מתוך 40 נק'</Text>
+                    <Text style={styles.totalScoreText}>מתוך 40 נק&apos;</Text>
                   </View>
                 </View>
 
@@ -649,7 +967,7 @@ export default function NewExerciseScreen() {
                   <Text style={styles.totalScoreLabel}>ציון הערכת קב&apos;ט:</Text>
                   <View style={styles.totalScoreValue}>
                     <Text style={styles.totalScoreNumber}>{parseInt(kabtEvaluation) || 0}</Text>
-                    <Text style={styles.totalScoreText}>מתוך 20 נק'</Text>
+                    <Text style={styles.totalScoreText}>מתוך 20 נק&apos;</Text>
                   </View>
                 </View>
 
@@ -659,7 +977,7 @@ export default function NewExerciseScreen() {
                   <Text style={styles.finalScoreLabel}>ציון סופי:</Text>
                   <View style={styles.finalScoreValue}>
                     <Text style={styles.finalScoreNumber}>{calculateTotalScore()}</Text>
-                    <Text style={styles.finalScoreText}>מתוך 100 נק'</Text>
+                    <Text style={styles.finalScoreText}>מתוך 100 נק&apos;</Text>
                   </View>
                 </View>
               </View>
@@ -668,6 +986,14 @@ export default function NewExerciseScreen() {
         </View>
 
         <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={styles.exportButton}
+            onPress={handleExport}
+          >
+            <Download size={20} color="#DC2626" />
+            <Text style={styles.exportButtonText}>ייצוא לקובץ</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
             <Text style={styles.submitButtonText}>שמור תרגיל</Text>
           </TouchableOpacity>
@@ -916,6 +1242,27 @@ const styles = StyleSheet.create({
     gap: 12,
     marginTop: 16,
     marginBottom: 32,
+  },
+  exportButton: {
+    flexDirection: 'row' as const,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderWidth: 2,
+    borderColor: '#DC2626',
+    shadowColor: '#DC2626',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  exportButtonText: {
+    color: '#DC2626',
+    fontSize: 16,
+    fontWeight: '700' as const,
   },
   submitButton: {
     backgroundColor: '#DC2626',

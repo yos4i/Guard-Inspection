@@ -463,8 +463,8 @@ export default function InspectionScreen() {
         }
 
         const file = new File(Paths.cache, fileName);
-        file.create({ overwrite: true });
-        file.write(htmlContent);
+        await file.create({ overwrite: true });
+        await file.write(htmlContent);
 
         await Sharing.shareAsync(file.uri, {
           mimeType: 'text/html',

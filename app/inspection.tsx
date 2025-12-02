@@ -13,7 +13,6 @@ import {
 import { Stack, useRouter, useLocalSearchParams } from 'expo-router';
 import { useGuards } from '@/contexts/GuardsProvider';
 import { ClipboardCheck, CheckCircle2, Download } from 'lucide-react-native';
-import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 
 export default function InspectionScreen() {
@@ -462,17 +461,17 @@ export default function InspectionScreen() {
           return;
         }
 
-        const fileUri = `${FileSystem.cacheDirectory}${fileName}`;
-        await FileSystem.writeAsStringAsync(fileUri, htmlContent, {
-          encoding: FileSystem.EncodingType.UTF8,
-        });
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const file = new File([blob], fileName, { type: 'text/html' });
+        const dataUrl = URL.createObjectURL(file);
 
-        await Sharing.shareAsync(fileUri, {
+        await Sharing.shareAsync(dataUrl, {
           mimeType: 'text/html',
           dialogTitle: 'ייצוא טופס בקרה',
           UTI: 'public.html',
         });
 
+        URL.revokeObjectURL(dataUrl);
         Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
       }
     } catch (error) {

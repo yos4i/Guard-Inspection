@@ -44,13 +44,6 @@ export default function NewExerciseScreen() {
   const [updatedKabt, setUpdatedKabt] = useState<RatingLevel>('מצוין');
   const [updatedCoordinator, setUpdatedCoordinator] = useState<RatingLevel>('מצוין');
   
-  const responseScore = [
-    parseInt(getRatingScore(identifiedThreat)),
-    parseInt(getRatingScore(reportedOnRadio)),
-    parseInt(getRatingScore(updatedKabt)),
-    parseInt(getRatingScore(updatedCoordinator)),
-  ].reduce((sum, score) => sum + score, 0);
-  
   const [responseSpeed, setResponseSpeed] = useState<RatingLevel>('מצוין');
   const [situationControl, setSituationControl] = useState<RatingLevel>('מצוין');
   const [confidenceUnderPressure, setConfidenceUnderPressure] = useState<RatingLevel>('מצוין');
@@ -572,9 +565,6 @@ export default function NewExerciseScreen() {
 
           <View style={styles.section}>
             <View style={styles.sectionTitleContainer}>
-              <View style={styles.sectionScoreBadge}>
-                <Text style={styles.sectionScoreText}>{responseScore}/40</Text>
-              </View>
               <Text style={styles.sectionTitle}>תגובת המאבטח</Text>
             </View>
             <View style={styles.sectionContent}>

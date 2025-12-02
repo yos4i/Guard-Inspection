@@ -329,6 +329,7 @@ export default function NewExerciseScreen() {
         }
 
         const file = new File(Paths.cache, fileName);
+        file.create({ overwrite: true });
         file.write(htmlContent);
 
         await Sharing.shareAsync(file.uri, {
@@ -336,6 +337,8 @@ export default function NewExerciseScreen() {
           dialogTitle: 'ייצוא דוח תרגיל',
           UTI: 'public.html',
         });
+        
+        Alert.alert('הצלחה', 'הקובץ שותף בהצלחה');
       }
     } catch (error) {
       console.error('Export error:', error);

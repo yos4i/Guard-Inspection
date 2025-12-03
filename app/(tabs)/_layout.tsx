@@ -24,7 +24,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "מאבטחים",
+          title: "בקרה",
           tabBarIcon: ({ color }) => <Users color={color} />,
         }}
       />

@@ -19,7 +19,7 @@ export default function GuardsScreen() {
 
   const handleDelete = (guardId: string, name: string) => {
     Alert.alert(
-      'מחיקת מאבטח',
+      'מחיקת בקרה',
       `האם אתה בטוח שברצונך למחוק את ${name}?`,
       [
         { text: 'ביטול', style: 'cancel' },
@@ -56,7 +56,7 @@ export default function GuardsScreen() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: 'מאבטחים',
+          title: 'בקרה',
           headerTitleAlign: 'center',
           headerLeft: () => (
             <TouchableOpacity
@@ -72,8 +72,8 @@ export default function GuardsScreen() {
       {guards.length === 0 ? (
         <View style={styles.emptyContainer}>
           <UserCircle size={80} color="#D1D5DB" strokeWidth={1.5} />
-          <Text style={styles.emptyTitle}>אין מאבטחים במערכת</Text>
-          <Text style={styles.emptyText}>הוסף מאבטח ראשון על ידי לחיצה על כפתור +</Text>
+          <Text style={styles.emptyTitle}>אין בקרות במערכת</Text>
+          <Text style={styles.emptyText}>הוסף בקרה ראשונה על ידי לחיצה על כפתור +</Text>
         </View>
       ) : (
         <FlatList
@@ -139,7 +139,7 @@ export default function GuardsScreen() {
       {guards.length > 0 && guards.length >= 25 && (
         <View style={styles.warningContainer}>
           <Text style={styles.warningText}>
-            הגעת למגבלת {guards.length}/30 מאבטחים
+            הגעת למגבלת {guards.length}/30 בקרות
           </Text>
         </View>
       )}

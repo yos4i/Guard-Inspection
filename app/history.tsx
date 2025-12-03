@@ -26,7 +26,7 @@ export default function HistoryScreen() {
   if (!guard) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>מאבטח לא נמצא</Text>
+        <Text style={styles.errorText}>בקרה לא נמצאה</Text>
       </View>
     );
   }
@@ -93,7 +93,7 @@ export default function HistoryScreen() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>טופס בקרה למאבטח - ${guard.firstName} ${guard.lastName}</title>
+  <title>טופס בקרה - ${guard.firstName} ${guard.lastName}</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -216,7 +216,7 @@ export default function HistoryScreen() {
 </head>
 <body>
   <div class="header">
-    <h1>טופס בקרה למאבטח</h1>
+    <h1>טופס בקרה</h1>
   </div>
 
   <div class="guard-info">

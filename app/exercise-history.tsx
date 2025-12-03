@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useGuards } from '@/contexts/GuardsProvider';
-import { Dumbbell, ChevronDown, ChevronUp, CheckCircle2, TrendingUp, Clock, User, Trash2 } from 'lucide-react-native';
+import { Dumbbell, ChevronDown, ChevronUp, Trash2 } from 'lucide-react-native';
 
 export default function ExerciseHistoryScreen() {
   const { guardId } = useLocalSearchParams<{ guardId: string }>();
@@ -91,28 +91,20 @@ export default function ExerciseHistoryScreen() {
       />
 
       <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <View style={styles.guardIcon}>
-            <User size={32} color="#FFFFFF" strokeWidth={2} />
-          </View>
-          <View style={styles.guardInfo}>
-            <Text style={styles.guardName}>
-              {guard.firstName} {guard.lastName}
-            </Text>
-            <Text style={styles.guardId}>ת.ז: {guard.idNumber}</Text>
-          </View>
-        </View>
-
+        <Text style={styles.guardName}>
+          {guard.firstName} {guard.lastName}
+        </Text>
+        <Text style={styles.guardId}>ת.ז: {guard.idNumber}</Text>
+        <Text style={styles.totalExercises}>
+          סה״כ תרגילים: {exercises.length}
+        </Text>
       </View>
 
       {exercises.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <View style={styles.emptyIconCircle}>
-            <Dumbbell size={64} color="#DC2626" strokeWidth={1.5} />
-          </View>
-          <Text style={styles.emptyTitle}>אין תרגילים עדיין</Text>
-          <Text style={styles.emptyText}>זה הזמן להתחיל באימונים! 💪</Text>
-          <Text style={styles.emptySubtext}>תרגילים יופיעו כאן לאחר ביצועם</Text>
+          <Dumbbell size={60} color="#D1D5DB" strokeWidth={1.5} />
+          <Text style={styles.emptyTitle}>אין תרגילים</Text>
+          <Text style={styles.emptyText}>טרם בוצעו תרגילים למאבטח זה</Text>
         </View>
       ) : (
         <FlatList
@@ -131,49 +123,38 @@ export default function ExerciseHistoryScreen() {
                   onPress={() => setExpandedExerciseId(isExpanded ? null : item.id)}
                 >
                   <View style={styles.cardHeader}>
-                    <View style={styles.headerLeft}>
-                      <View style={styles.iconCircle}>
-                        <Dumbbell size={26} color="#FFFFFF" strokeWidth={2.5} />
-                      </View>
+                    <View style={[
+                      styles.scoreContainer,
+                      { backgroundColor: scoreColor + '20' },
+                    ]}>
+                      <Text style={[
+                        styles.scoreValue,
+                        { color: scoreColor },
+                      ]}>{totalScore}</Text>
+                      <Text style={[
+                        styles.scoreLabel,
+                        { color: scoreColor },
+                      ]}>ציון</Text>
                     </View>
                     <View style={styles.headerCenter}>
-                      <View style={styles.typeBadge}>
-                        <Text style={styles.typeBadgeText}>{item.exerciseType}</Text>
-                      </View>
-                      <View style={styles.dateRow}>
-                        <Clock size={14} color="#6B7280" />
-                        <Text style={styles.date}>{formatDate(item.date)}</Text>
-                      </View>
-                      <Text style={styles.instructor}>👨‍🏫 {item.instructorName}</Text>
+                      <Text style={styles.date}>{formatDate(item.date)}</Text>
+                      <Text style={styles.instructor}>מדריך: {item.instructorName}</Text>
+                      <Text style={styles.exerciseType}>{item.exerciseType}</Text>
                     </View>
                     <View style={styles.headerRight}>
-                      <View style={styles.scoreCircle}>
-                        <Text style={[styles.scoreText, { color: scoreColor }]}>
-                          {totalScore}
-                        </Text>
-                      </View>
-                      <View style={styles.expandButton}>
-                        {isExpanded ? (
-                          <ChevronUp size={20} color="#FFFFFF" strokeWidth={2.5} />
-                        ) : (
-                          <ChevronDown size={20} color="#FFFFFF" strokeWidth={2.5} />
-                        )}
-                      </View>
+                      {isExpanded ? (
+                        <ChevronUp size={24} color="#6B7280" />
+                      ) : (
+                        <ChevronDown size={24} color="#6B7280" />
+                      )}
                     </View>
                   </View>
                 </TouchableOpacity>
 
                 {isExpanded && (
                   <>
-                    <View style={styles.divider} />
-                    
                     <View style={styles.section}>
-                      <View style={styles.sectionHeader}>
-                        <View style={styles.sectionIconBg}>
-                          <Text style={styles.sectionIcon}>📋</Text>
-                        </View>
-                        <Text style={styles.sectionTitle}>תיאור התרחיש</Text>
-                      </View>
+                      <Text style={styles.sectionTitle}>תיאור התרחיש</Text>
                       <View style={styles.sectionContent}>
                         <View style={styles.descriptionBox}>
                           <Text style={styles.descriptionText}>
@@ -184,179 +165,115 @@ export default function ExerciseHistoryScreen() {
                     </View>
 
                     <View style={styles.section}>
-                      <View style={styles.sectionHeader}>
-                        <View style={styles.sectionIconBg}>
-                          <Text style={styles.sectionIcon}>✅</Text>
-                        </View>
-                        <Text style={styles.sectionTitle}>תגובת המאבטח</Text>
-                      </View>
+                      <Text style={styles.sectionTitle}>תגובת המאבטח</Text>
                       <View style={styles.sectionContent}>
-                        <View style={styles.scoreRow}>
-                          <View style={styles.scoreRowLeft}>
+                        <View style={styles.ratingItem}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, flex: 1 }}>
                             <View style={[
                               styles.checkIcon,
                               item.identifiedThreat && styles.checkIconChecked,
                             ]}>
                               {item.identifiedThreat && <Text style={styles.checkmark}>✓</Text>}
                             </View>
-                            <Text style={styles.checkLabel}>זיהוי האיום / חשוד</Text>
-                          </View>
-                          <View style={styles.scorePointsBadge}>
-                            <Text style={styles.scorePointsText}>{item.identifiedThreatScore}</Text>
-                            <Text style={styles.scorePointsLabel}>נק&apos;</Text>
+                            <Text style={styles.checkLabel}>זיהוי האיום / חשוד ({item.identifiedThreatScore} נק&apos;)</Text>
                           </View>
                         </View>
-                        <View style={styles.scoreRow}>
-                          <View style={styles.scoreRowLeft}>
+                        <View style={styles.ratingItem}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, flex: 1 }}>
                             <View style={[
                               styles.checkIcon,
                               item.reportedOnRadio && styles.checkIconChecked,
                             ]}>
                               {item.reportedOnRadio && <Text style={styles.checkmark}>✓</Text>}
                             </View>
-                            <Text style={styles.checkLabel}>דיווח בקשר</Text>
-                          </View>
-                          <View style={styles.scorePointsBadge}>
-                            <Text style={styles.scorePointsText}>{item.reportedOnRadioScore}</Text>
-                            <Text style={styles.scorePointsLabel}>נק&apos;</Text>
+                            <Text style={styles.checkLabel}>דיווח בקשר ({item.reportedOnRadioScore} נק&apos;)</Text>
                           </View>
                         </View>
-                        <View style={styles.scoreRow}>
-                          <View style={styles.scoreRowLeft}>
+                        <View style={styles.ratingItem}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, flex: 1 }}>
                             <View style={[
                               styles.checkIcon,
                               item.updatedKabt && styles.checkIconChecked,
                             ]}>
                               {item.updatedKabt && <Text style={styles.checkmark}>✓</Text>}
                             </View>
-                            <Text style={styles.checkLabel}>עדכון קב&quot;ט</Text>
-                          </View>
-                          <View style={styles.scorePointsBadge}>
-                            <Text style={styles.scorePointsText}>{item.updatedKabtScore}</Text>
-                            <Text style={styles.scorePointsLabel}>נק&apos;</Text>
+                            <Text style={styles.checkLabel}>עדכון קב&quot;ט ({item.updatedKabtScore} נק&apos;)</Text>
                           </View>
                         </View>
-                        <View style={styles.scoreRow}>
-                          <View style={styles.scoreRowLeft}>
+                        <View style={styles.ratingItem}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, flex: 1 }}>
                             <View style={[
                               styles.checkIcon,
                               item.updatedCoordinator && styles.checkIconChecked,
                             ]}>
                               {item.updatedCoordinator && <Text style={styles.checkmark}>✓</Text>}
                             </View>
-                            <Text style={styles.checkLabel}>עדכון רכז ביטחון / מנהל</Text>
-                          </View>
-                          <View style={styles.scorePointsBadge}>
-                            <Text style={styles.scorePointsText}>{item.updatedCoordinatorScore}</Text>
-                            <Text style={styles.scorePointsLabel}>נק&apos;</Text>
+                            <Text style={styles.checkLabel}>עדכון רכז ביטחון / מנהל ({item.updatedCoordinatorScore} נק&apos;)</Text>
                           </View>
                         </View>
                       </View>
                     </View>
 
                     <View style={styles.section}>
-                      <View style={styles.sectionHeader}>
-                        <View style={styles.sectionIconBg}>
-                          <Text style={styles.sectionIcon}>⭐</Text>
-                        </View>
-                        <Text style={styles.sectionTitle}>הערכה מקצועית</Text>
-                      </View>
+                      <Text style={styles.sectionTitle}>הערכה מקצועית</Text>
                       <View style={styles.sectionContent}>
-                        <View style={styles.professionalRow}>
-                          <View style={styles.professionalRowLeft}>
-                            <Text style={styles.ratingLabel}>⚡ מהירות תגובה:</Text>
-                            <View style={[styles.ratingBadge, getRatingColor(item.responseSpeed)]}>
-                              <Text style={styles.ratingBadgeText}>
-                                {item.responseSpeed}
-                              </Text>
-                            </View>
-                          </View>
-                          <View style={styles.scorePointsBadge}>
-                            <Text style={styles.scorePointsText}>{item.responseSpeedScore}</Text>
-                            <Text style={styles.scorePointsLabel}>נק&apos;</Text>
+                        <View style={styles.ratingItem}>
+                          <Text style={styles.ratingLabel}>מהירות תגובה ({item.responseSpeedScore} נק&apos;)</Text>
+                          <View style={[styles.ratingBadge, getRatingColor(item.responseSpeed)]}>
+                            <Text style={styles.ratingBadgeText}>
+                              {item.responseSpeed}
+                            </Text>
                           </View>
                         </View>
-                        <View style={styles.professionalRow}>
-                          <View style={styles.professionalRowLeft}>
-                            <Text style={styles.ratingLabel}>🎯 רמת שליטה במצב:</Text>
-                            <View style={[styles.ratingBadge, getRatingColor(item.situationControl)]}>
-                              <Text style={styles.ratingBadgeText}>
-                                {item.situationControl}
-                              </Text>
-                            </View>
-                          </View>
-                          <View style={styles.scorePointsBadge}>
-                            <Text style={styles.scorePointsText}>{item.situationControlScore}</Text>
-                            <Text style={styles.scorePointsLabel}>נק&apos;</Text>
+                        <View style={styles.ratingItem}>
+                          <Text style={styles.ratingLabel}>רמת שליטה במצב ({item.situationControlScore} נק&apos;)</Text>
+                          <View style={[styles.ratingBadge, getRatingColor(item.situationControl)]}>
+                            <Text style={styles.ratingBadgeText}>
+                              {item.situationControl}
+                            </Text>
                           </View>
                         </View>
-                        <View style={styles.professionalRow}>
-                          <View style={styles.professionalRowLeft}>
-                            <Text style={styles.ratingLabel}>💪 ביטחון ועמידה בלחץ:</Text>
-                            <View style={[styles.ratingBadge, getRatingColor(item.confidenceUnderPressure)]}>
-                              <Text style={styles.ratingBadgeText}>
-                                {item.confidenceUnderPressure}
-                              </Text>
-                            </View>
-                          </View>
-                          <View style={styles.scorePointsBadge}>
-                            <Text style={styles.scorePointsText}>{item.confidenceUnderPressureScore}</Text>
-                            <Text style={styles.scorePointsLabel}>נק&apos;</Text>
+                        <View style={styles.ratingItem}>
+                          <Text style={styles.ratingLabel}>ביטחון ועמידה בלחץ ({item.confidenceUnderPressureScore} נק&apos;)</Text>
+                          <View style={[styles.ratingBadge, getRatingColor(item.confidenceUnderPressure)]}>
+                            <Text style={styles.ratingBadgeText}>
+                              {item.confidenceUnderPressure}
+                            </Text>
                           </View>
                         </View>
                       </View>
                     </View>
 
                     <View style={styles.section}>
-                      <View style={styles.sectionHeader}>
-                        <View style={styles.sectionIconBg}>
-                          <Text style={styles.sectionIcon}>📝</Text>
-                        </View>
-                        <Text style={styles.sectionTitle}>סיכום קב&quot;ט</Text>
-                      </View>
+                      <Text style={styles.sectionTitle}>סיכום מדריך</Text>
                       <View style={styles.sectionContent}>
                         {item.toMaintain && (
                           <View style={styles.summaryItem}>
-                            <View style={styles.summaryItemHeader}>
-                              <CheckCircle2 size={16} color="#10B981" strokeWidth={2.5} />
-                              <Text style={styles.summaryLabelGreen}>לשימור:</Text>
-                            </View>
-                            <View style={styles.summaryTextBox}>
-                              <Text style={styles.summaryText}>{item.toMaintain}</Text>
-                            </View>
+                            <Text style={styles.summaryLabel}>לשימור:</Text>
+                            <Text style={styles.summaryText}>{item.toMaintain}</Text>
                           </View>
                         )}
                         {item.toImprove && (
                           <View style={styles.summaryItem}>
-                            <View style={styles.summaryItemHeader}>
-                              <TrendingUp size={16} color="#F59E0B" strokeWidth={2.5} />
-                              <Text style={styles.summaryLabelOrange}>לשיפור:</Text>
-                            </View>
-                            <View style={styles.summaryTextBox}>
-                              <Text style={styles.summaryText}>{item.toImprove}</Text>
-                            </View>
+                            <Text style={styles.summaryLabel}>לשיפור:</Text>
+                            <Text style={styles.summaryText}>{item.toImprove}</Text>
                           </View>
                         )}
                         {item.additionalNotes && (
                           <View style={styles.summaryItem}>
-                            <View style={styles.summaryItemHeader}>
-                              <Text style={styles.summaryEmoji}>💭</Text>
-                              <Text style={styles.summaryLabelBlue}>הערות נוספות:</Text>
-                            </View>
-                            <View style={styles.summaryTextBox}>
-                              <Text style={styles.summaryText}>{item.additionalNotes}</Text>
-                            </View>
+                            <Text style={styles.summaryLabel}>הערות נוספות:</Text>
+                            <Text style={styles.summaryText}>{item.additionalNotes}</Text>
                           </View>
                         )}
                       </View>
                     </View>
 
-                    {item.guardSignature && (
+                    {item.guardSignature ? (
                       <View style={styles.signatureContainer}>
                         <Text style={styles.signatureLabel}>חתימת המאבטח:</Text>
                         <Text style={styles.signatureText}>{item.guardSignature}</Text>
                       </View>
-                    )}
+                    ) : null}
 
                     <TouchableOpacity
                       style={styles.deleteButton}
@@ -384,44 +301,17 @@ export default function ExerciseHistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#F3F4F6',
   },
   header: {
     backgroundColor: '#FFFFFF',
     padding: 20,
-    paddingBottom: 24,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 5,
-  },
-  headerTop: {
-    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
     alignItems: 'center',
-    marginBottom: 20,
-    gap: 12,
-  },
-  guardIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#DC2626',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#DC2626',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  guardInfo: {
-    flex: 1,
   },
   guardName: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '700' as const,
     color: '#1F2937',
     marginBottom: 4,
@@ -429,32 +319,12 @@ const styles = StyleSheet.create({
   guardId: {
     fontSize: 14,
     color: '#6B7280',
-    fontWeight: '500' as const,
+    marginBottom: 8,
   },
-  statsContainer: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  statBox: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-    borderRadius: 16,
-    padding: 16,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  statNumber: {
-    fontSize: 24,
-    fontWeight: '700' as const,
-    color: '#1F2937',
-    marginTop: 8,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginTop: 4,
+  totalExercises: {
+    fontSize: 14,
     fontWeight: '600' as const,
+    color: '#2563EB',
   },
   emptyContainer: {
     flex: 1,
@@ -462,31 +332,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 32,
   },
-  emptyIconCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#FEE2E2',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
   emptyTitle: {
-    fontSize: 22,
-    fontWeight: '700' as const,
+    fontSize: 20,
+    fontWeight: '600' as const,
     color: '#1F2937',
-    marginTop: 8,
-    marginBottom: 8,
+    marginTop: 16,
   },
   emptyText: {
-    fontSize: 16,
-    color: '#DC2626',
-    fontWeight: '600' as const,
-    textAlign: 'center',
-  },
-  emptySubtext: {
     fontSize: 14,
-    color: '#9CA3AF',
+    color: '#6B7280',
     marginTop: 8,
     textAlign: 'center',
   },
@@ -496,220 +350,111 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 18,
-    marginBottom: 14,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 4,
-    borderWidth: 1,
-    borderColor: '#F3F4F6',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingBottom: 12,
   },
-  headerLeft: {
-    marginLeft: 12,
-  },
-  iconCircle: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: '#DC2626',
+  scoreContainer: {
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#DC2626',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 3,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+    minWidth: 55,
+  },
+  scoreLabel: {
+    fontSize: 11,
+    fontWeight: '600' as const,
+    marginTop: 2,
+  },
+  scoreValue: {
+    fontSize: 20,
+    fontWeight: '700' as const,
   },
   headerCenter: {
     flex: 1,
     marginHorizontal: 12,
   },
   headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  scoreCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#F9FAFB',
-    alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 3,
-    borderColor: '#E5E7EB',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  scoreText: {
-    fontSize: 20,
-    fontWeight: '800' as const,
-  },
-  dateRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 6,
   },
   date: {
-    fontSize: 13,
-    fontWeight: '500' as const,
-    color: '#6B7280',
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: '#1F2937',
+    marginBottom: 4,
   },
   instructor: {
+    fontSize: 14,
+    color: '#6B7280',
+  },
+  exerciseType: {
     fontSize: 13,
     color: '#6B7280',
-    fontWeight: '500' as const,
-  },
-  typeBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#DC2626',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 10,
-    marginBottom: 8,
-    shadowColor: '#DC2626',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  typeBadgeText: {
-    fontSize: 13,
-    fontWeight: '700' as const,
-    color: '#FFFFFF',
-  },
-  expandButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#DC2626',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#DC2626',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#F3F4F6',
-    marginVertical: 12,
+    marginTop: 2,
   },
   section: {
     marginBottom: 16,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 12,
-  },
-  sectionIconBg: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    backgroundColor: '#F9FAFB',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sectionIcon: {
-    fontSize: 16,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '700' as const,
     color: '#1F2937',
+    marginBottom: 10,
   },
   sectionContent: {
     gap: 8,
   },
   descriptionBox: {
-    backgroundColor: '#F9FAFB',
-    borderRadius: 12,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+    paddingVertical: 8,
   },
   descriptionText: {
     fontSize: 14,
     color: '#374151',
-    lineHeight: 22,
+    lineHeight: 20,
   },
-  checkItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 6,
-    gap: 10,
-  },
-  scoreRow: {
+  ratingItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 8,
-    gap: 12,
-  },
-  scoreRowLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: 10,
+  },
+  ratingLabel: {
     flex: 1,
+    fontSize: 14,
+    color: '#374151',
+    lineHeight: 20,
   },
-  scorePointsBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#DC2626',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 10,
-    gap: 4,
-    shadowColor: '#DC2626',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 2,
+  ratingBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
   },
-  scorePointsText: {
-    fontSize: 15,
-    fontWeight: '700' as const,
-    color: '#FFFFFF',
-  },
-  scorePointsLabel: {
-    fontSize: 11,
+  ratingBadgeText: {
+    fontSize: 12,
     fontWeight: '600' as const,
     color: '#FFFFFF',
-    opacity: 0.9,
-  },
-  professionalRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
-    gap: 12,
-  },
-  professionalRowLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flex: 1,
-    gap: 8,
   },
   checkIcon: {
-    width: 22,
-    height: 22,
-    borderRadius: 6,
+    width: 18,
+    height: 18,
+    borderRadius: 4,
     borderWidth: 2,
     borderColor: '#D1D5DB',
     alignItems: 'center',
@@ -722,7 +467,7 @@ const styles = StyleSheet.create({
   },
   checkmark: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '700' as const,
   },
   checkLabel: {
@@ -730,89 +475,36 @@ const styles = StyleSheet.create({
     color: '#374151',
     flex: 1,
   },
-  ratingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 6,
-  },
-  ratingLabel: {
-    fontSize: 14,
-    color: '#374151',
-    flex: 1,
-  },
-  ratingBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  ratingBadgeText: {
-    fontSize: 13,
-    fontWeight: '700' as const,
-    color: '#FFFFFF',
-  },
   summaryItem: {
-    marginBottom: 12,
+    marginBottom: 10,
   },
-  summaryItemHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
-  },
-  summaryEmoji: {
-    fontSize: 16,
-  },
-  summaryLabelGreen: {
+  summaryLabel: {
     fontSize: 14,
-    fontWeight: '700' as const,
-    color: '#10B981',
-  },
-  summaryLabelOrange: {
-    fontSize: 14,
-    fontWeight: '700' as const,
-    color: '#F59E0B',
-  },
-  summaryLabelBlue: {
-    fontSize: 14,
-    fontWeight: '700' as const,
-    color: '#3B82F6',
-  },
-  summaryTextBox: {
-    backgroundColor: '#F9FAFB',
-    borderRadius: 10,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+    fontWeight: '600' as const,
+    color: '#374151',
+    marginBottom: 6,
   },
   summaryText: {
     fontSize: 14,
-    color: '#4B5563',
+    color: '#6B7280',
     lineHeight: 20,
   },
   signatureContainer: {
-    marginTop: 16,
-    paddingTop: 16,
-    borderTopWidth: 2,
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
     borderTopColor: '#E5E7EB',
-    borderStyle: 'dashed' as const,
   },
   signatureLabel: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600' as const,
-    color: '#6B7280',
-    marginBottom: 8,
+    color: '#374151',
+    marginBottom: 4,
   },
   signatureText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#1F2937',
-    fontWeight: '600' as const,
-    fontStyle: 'italic' as const,
+    fontWeight: '500' as const,
   },
   errorText: {
     fontSize: 16,
@@ -827,13 +519,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#DC2626',
     paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 12,
+    borderRadius: 10,
     marginTop: 16,
     gap: 8,
     shadowColor: '#DC2626',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
-    shadowRadius: 6,
+    shadowRadius: 4,
     elevation: 3,
   },
   deleteButtonText: {

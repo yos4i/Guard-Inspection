@@ -219,7 +219,7 @@ export default function NewExerciseScreen() {
   <div class="section">
     <div class="section-title">פרטי התרגיל</div>
     <div class="info-row">
-      <span class="info-label">שם הקב"ט המתרגל:</span>
+      <span class="info-label">שם הקב"ט המבקר:</span>
       <span class="info-value">${instructorName}</span>
     </div>
     <div class="info-row">
@@ -500,7 +500,7 @@ export default function NewExerciseScreen() {
             </View>
             <View style={styles.sectionContent}>
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>שם הקב&apos;ט המתרגל *</Text>
+                <Text style={styles.label}>שם הקב&quot;ט המבקר *</Text>
                 <TextInput
                   style={styles.input}
                   value={instructorName}

@@ -263,7 +263,7 @@ export default function ExerciseHistoryScreen() {
   </div>
 
   <div class="instructor-info">
-    <p><strong>שם המדריך:</strong> ${exercise.instructorName || '---'}</p>
+    <p><strong>שם הקב"ט המבקר:</strong> ${exercise.instructorName || '---'}</p>
     <p><strong>תאריך התרגיל:</strong> ${new Date(exercise.date).toLocaleDateString('he-IL')}</p>
     <p><strong>סוג התרגיל:</strong> ${exercise.exerciseType}</p>
   </div>

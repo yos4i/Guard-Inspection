@@ -571,142 +571,226 @@ export default function NewExerciseScreen() {
             </View>
             <View style={styles.sectionContent}>
               <View style={styles.ratingGroup}>
-                <View style={styles.ratingHeader}>
-                  <Text style={styles.ratingLabel}>זיהוי האיום / חשוד</Text>
-                  <View style={styles.scoreDisplay}>
-                    <Text style={styles.scoreDisplayText}>{getRatingScore(identifiedThreat)}</Text>
-                    <Text style={styles.scoreLabel}>נק&apos;</Text>
-                  </View>
-                </View>
+                <Text style={styles.ratingLabel}>זיהוי האיום / חשוד</Text>
                 <View style={styles.ratingButtons}>
-                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
-                    <TouchableOpacity
-                      key={level}
-                      style={[
-                        styles.ratingButton,
-                        level === 'מצוין' && styles.ratingButtonExcellent,
-                        level === 'טוב' && styles.ratingButtonGood,
-                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
-                        identifiedThreat === level && styles.ratingButtonActive,
-                      ]}
-                      onPress={() => setIdentifiedThreat(level)}
-                      activeOpacity={0.7}
-                    >
-                      <Text
-                        style={[
-                          styles.ratingButtonText,
-                          identifiedThreat === level && styles.ratingButtonTextActive,
-                        ]}
-                      >
-                        {level}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonNeedsWork,
+                      identifiedThreat === 'צריך שיפור' && styles.ratingButtonNeedsWorkActive,
+                    ]}
+                    onPress={() => setIdentifiedThreat('צריך שיפור')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      identifiedThreat === 'צריך שיפור' && styles.ratingButtonTextActive,
+                    ]}>
+                      דרוש שיפור
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonGood,
+                      identifiedThreat === 'טוב' && styles.ratingButtonGoodActive,
+                    ]}
+                    onPress={() => setIdentifiedThreat('טוב')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      identifiedThreat === 'טוב' && styles.ratingButtonTextActive,
+                    ]}>
+                      טוב
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonExcellent,
+                      identifiedThreat === 'מצוין' && styles.ratingButtonActive,
+                    ]}
+                    onPress={() => setIdentifiedThreat('מצוין')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      identifiedThreat === 'מצוין' && styles.ratingButtonTextActive,
+                    ]}>
+                      מצוין
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
 
               <View style={styles.ratingGroup}>
-                <View style={styles.ratingHeader}>
-                  <Text style={styles.ratingLabel}>דיווח בקשר</Text>
-                  <View style={styles.scoreDisplay}>
-                    <Text style={styles.scoreDisplayText}>{getRatingScore(reportedOnRadio)}</Text>
-                    <Text style={styles.scoreLabel}>נק&apos;</Text>
-                  </View>
-                </View>
+                <Text style={styles.ratingLabel}>דיווח בקשר</Text>
                 <View style={styles.ratingButtons}>
-                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
-                    <TouchableOpacity
-                      key={level}
-                      style={[
-                        styles.ratingButton,
-                        level === 'מצוין' && styles.ratingButtonExcellent,
-                        level === 'טוב' && styles.ratingButtonGood,
-                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
-                        reportedOnRadio === level && styles.ratingButtonActive,
-                      ]}
-                      onPress={() => setReportedOnRadio(level)}
-                      activeOpacity={0.7}
-                    >
-                      <Text
-                        style={[
-                          styles.ratingButtonText,
-                          reportedOnRadio === level && styles.ratingButtonTextActive,
-                        ]}
-                      >
-                        {level}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonNeedsWork,
+                      reportedOnRadio === 'צריך שיפור' && styles.ratingButtonNeedsWorkActive,
+                    ]}
+                    onPress={() => setReportedOnRadio('צריך שיפור')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      reportedOnRadio === 'צריך שיפור' && styles.ratingButtonTextActive,
+                    ]}>
+                      דרוש שיפור
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonGood,
+                      reportedOnRadio === 'טוב' && styles.ratingButtonGoodActive,
+                    ]}
+                    onPress={() => setReportedOnRadio('טוב')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      reportedOnRadio === 'טוב' && styles.ratingButtonTextActive,
+                    ]}>
+                      טוב
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonExcellent,
+                      reportedOnRadio === 'מצוין' && styles.ratingButtonActive,
+                    ]}
+                    onPress={() => setReportedOnRadio('מצוין')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      reportedOnRadio === 'מצוין' && styles.ratingButtonTextActive,
+                    ]}>
+                      מצוין
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
 
               <View style={styles.ratingGroup}>
-                <View style={styles.ratingHeader}>
-                  <Text style={styles.ratingLabel}>עדכון קב&apos;ט</Text>
-                  <View style={styles.scoreDisplay}>
-                    <Text style={styles.scoreDisplayText}>{getRatingScore(updatedKabt)}</Text>
-                    <Text style={styles.scoreLabel}>נק&apos;</Text>
-                  </View>
-                </View>
+                <Text style={styles.ratingLabel}>עדכון קב&apos;ט</Text>
                 <View style={styles.ratingButtons}>
-                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
-                    <TouchableOpacity
-                      key={level}
-                      style={[
-                        styles.ratingButton,
-                        level === 'מצוין' && styles.ratingButtonExcellent,
-                        level === 'טוב' && styles.ratingButtonGood,
-                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
-                        updatedKabt === level && styles.ratingButtonActive,
-                      ]}
-                      onPress={() => setUpdatedKabt(level)}
-                      activeOpacity={0.7}
-                    >
-                      <Text
-                        style={[
-                          styles.ratingButtonText,
-                          updatedKabt === level && styles.ratingButtonTextActive,
-                        ]}
-                      >
-                        {level}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonNeedsWork,
+                      updatedKabt === 'צריך שיפור' && styles.ratingButtonNeedsWorkActive,
+                    ]}
+                    onPress={() => setUpdatedKabt('צריך שיפור')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      updatedKabt === 'צריך שיפור' && styles.ratingButtonTextActive,
+                    ]}>
+                      דרוש שיפור
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonGood,
+                      updatedKabt === 'טוב' && styles.ratingButtonGoodActive,
+                    ]}
+                    onPress={() => setUpdatedKabt('טוב')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      updatedKabt === 'טוב' && styles.ratingButtonTextActive,
+                    ]}>
+                      טוב
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonExcellent,
+                      updatedKabt === 'מצוין' && styles.ratingButtonActive,
+                    ]}
+                    onPress={() => setUpdatedKabt('מצוין')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      updatedKabt === 'מצוין' && styles.ratingButtonTextActive,
+                    ]}>
+                      מצוין
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
 
               <View style={styles.ratingGroup}>
-                <View style={styles.ratingHeader}>
-                  <Text style={styles.ratingLabel}>עדכון רכז ביטחון / מנהל</Text>
-                  <View style={styles.scoreDisplay}>
-                    <Text style={styles.scoreDisplayText}>{getRatingScore(updatedCoordinator)}</Text>
-                    <Text style={styles.scoreLabel}>נק&apos;</Text>
-                  </View>
-                </View>
+                <Text style={styles.ratingLabel}>עדכון רכז ביטחון / מנהל</Text>
                 <View style={styles.ratingButtons}>
-                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
-                    <TouchableOpacity
-                      key={level}
-                      style={[
-                        styles.ratingButton,
-                        level === 'מצוין' && styles.ratingButtonExcellent,
-                        level === 'טוב' && styles.ratingButtonGood,
-                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
-                        updatedCoordinator === level && styles.ratingButtonActive,
-                      ]}
-                      onPress={() => setUpdatedCoordinator(level)}
-                      activeOpacity={0.7}
-                    >
-                      <Text
-                        style={[
-                          styles.ratingButtonText,
-                          updatedCoordinator === level && styles.ratingButtonTextActive,
-                        ]}
-                      >
-                        {level}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonNeedsWork,
+                      updatedCoordinator === 'צריך שיפור' && styles.ratingButtonNeedsWorkActive,
+                    ]}
+                    onPress={() => setUpdatedCoordinator('צריך שיפור')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      updatedCoordinator === 'צריך שיפור' && styles.ratingButtonTextActive,
+                    ]}>
+                      דרוש שיפור
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonGood,
+                      updatedCoordinator === 'טוב' && styles.ratingButtonGoodActive,
+                    ]}
+                    onPress={() => setUpdatedCoordinator('טוב')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      updatedCoordinator === 'טוב' && styles.ratingButtonTextActive,
+                    ]}>
+                      טוב
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonExcellent,
+                      updatedCoordinator === 'מצוין' && styles.ratingButtonActive,
+                    ]}
+                    onPress={() => setUpdatedCoordinator('מצוין')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      updatedCoordinator === 'מצוין' && styles.ratingButtonTextActive,
+                    ]}>
+                      מצוין
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -718,142 +802,226 @@ export default function NewExerciseScreen() {
             </View>
             <View style={styles.sectionContent}>
               <View style={styles.ratingGroup}>
-                <View style={styles.ratingHeader}>
-                  <Text style={styles.ratingLabel}>מהירות תגובה</Text>
-                  <View style={styles.scoreDisplay}>
-                    <Text style={styles.scoreDisplayText}>{getRatingScore(responseSpeed)}</Text>
-                    <Text style={styles.scoreLabel}>נק&apos;</Text>
-                  </View>
-                </View>
+                <Text style={styles.ratingLabel}>מהירות תגובה</Text>
                 <View style={styles.ratingButtons}>
-                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
-                    <TouchableOpacity
-                      key={level}
-                      style={[
-                        styles.ratingButton,
-                        level === 'מצוין' && styles.ratingButtonExcellent,
-                        level === 'טוב' && styles.ratingButtonGood,
-                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
-                        responseSpeed === level && styles.ratingButtonActive,
-                      ]}
-                      onPress={() => setResponseSpeed(level)}
-                      activeOpacity={0.7}
-                    >
-                      <Text
-                        style={[
-                          styles.ratingButtonText,
-                          responseSpeed === level && styles.ratingButtonTextActive,
-                        ]}
-                      >
-                        {level}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonNeedsWork,
+                      responseSpeed === 'צריך שיפור' && styles.ratingButtonNeedsWorkActive,
+                    ]}
+                    onPress={() => setResponseSpeed('צריך שיפור')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      responseSpeed === 'צריך שיפור' && styles.ratingButtonTextActive,
+                    ]}>
+                      דרוש שיפור
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonGood,
+                      responseSpeed === 'טוב' && styles.ratingButtonGoodActive,
+                    ]}
+                    onPress={() => setResponseSpeed('טוב')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      responseSpeed === 'טוב' && styles.ratingButtonTextActive,
+                    ]}>
+                      טוב
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonExcellent,
+                      responseSpeed === 'מצוין' && styles.ratingButtonActive,
+                    ]}
+                    onPress={() => setResponseSpeed('מצוין')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      responseSpeed === 'מצוין' && styles.ratingButtonTextActive,
+                    ]}>
+                      מצוין
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
 
               <View style={styles.ratingGroup}>
-                <View style={styles.ratingHeader}>
-                  <Text style={styles.ratingLabel}>רמת שליטה במצב</Text>
-                  <View style={styles.scoreDisplay}>
-                    <Text style={styles.scoreDisplayText}>{getRatingScore(situationControl)}</Text>
-                    <Text style={styles.scoreLabel}>נק&apos;</Text>
-                  </View>
-                </View>
+                <Text style={styles.ratingLabel}>רמת שליטה במצב</Text>
                 <View style={styles.ratingButtons}>
-                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
-                    <TouchableOpacity
-                      key={level}
-                      style={[
-                        styles.ratingButton,
-                        level === 'מצוין' && styles.ratingButtonExcellent,
-                        level === 'טוב' && styles.ratingButtonGood,
-                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
-                        situationControl === level && styles.ratingButtonActive,
-                      ]}
-                      onPress={() => setSituationControl(level)}
-                      activeOpacity={0.7}
-                    >
-                      <Text
-                        style={[
-                          styles.ratingButtonText,
-                          situationControl === level && styles.ratingButtonTextActive,
-                        ]}
-                      >
-                        {level}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonNeedsWork,
+                      situationControl === 'צריך שיפור' && styles.ratingButtonNeedsWorkActive,
+                    ]}
+                    onPress={() => setSituationControl('צריך שיפור')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      situationControl === 'צריך שיפור' && styles.ratingButtonTextActive,
+                    ]}>
+                      דרוש שיפור
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonGood,
+                      situationControl === 'טוב' && styles.ratingButtonGoodActive,
+                    ]}
+                    onPress={() => setSituationControl('טוב')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      situationControl === 'טוב' && styles.ratingButtonTextActive,
+                    ]}>
+                      טוב
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonExcellent,
+                      situationControl === 'מצוין' && styles.ratingButtonActive,
+                    ]}
+                    onPress={() => setSituationControl('מצוין')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      situationControl === 'מצוין' && styles.ratingButtonTextActive,
+                    ]}>
+                      מצוין
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
 
               <View style={styles.ratingGroup}>
-                <View style={styles.ratingHeader}>
-                  <Text style={styles.ratingLabel}>ביטחון המאבטח ועמידה בלחץ</Text>
-                  <View style={styles.scoreDisplay}>
-                    <Text style={styles.scoreDisplayText}>{getRatingScore(confidenceUnderPressure)}</Text>
-                    <Text style={styles.scoreLabel}>נק&apos;</Text>
-                  </View>
-                </View>
+                <Text style={styles.ratingLabel}>ביטחון המאבטח ועמידה בלחץ</Text>
                 <View style={styles.ratingButtons}>
-                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
-                    <TouchableOpacity
-                      key={level}
-                      style={[
-                        styles.ratingButton,
-                        level === 'מצוין' && styles.ratingButtonExcellent,
-                        level === 'טוב' && styles.ratingButtonGood,
-                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
-                        confidenceUnderPressure === level && styles.ratingButtonActive,
-                      ]}
-                      onPress={() => setConfidenceUnderPressure(level)}
-                      activeOpacity={0.7}
-                    >
-                      <Text
-                        style={[
-                          styles.ratingButtonText,
-                          confidenceUnderPressure === level && styles.ratingButtonTextActive,
-                        ]}
-                      >
-                        {level}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonNeedsWork,
+                      confidenceUnderPressure === 'צריך שיפור' && styles.ratingButtonNeedsWorkActive,
+                    ]}
+                    onPress={() => setConfidenceUnderPressure('צריך שיפור')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      confidenceUnderPressure === 'צריך שיפור' && styles.ratingButtonTextActive,
+                    ]}>
+                      דרוש שיפור
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonGood,
+                      confidenceUnderPressure === 'טוב' && styles.ratingButtonGoodActive,
+                    ]}
+                    onPress={() => setConfidenceUnderPressure('טוב')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      confidenceUnderPressure === 'טוב' && styles.ratingButtonTextActive,
+                    ]}>
+                      טוב
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonExcellent,
+                      confidenceUnderPressure === 'מצוין' && styles.ratingButtonActive,
+                    ]}
+                    onPress={() => setConfidenceUnderPressure('מצוין')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      confidenceUnderPressure === 'מצוין' && styles.ratingButtonTextActive,
+                    ]}>
+                      מצוין
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
 
               <View style={styles.ratingGroup}>
-                <View style={styles.ratingHeader}>
-                  <Text style={styles.ratingLabel}>עבד על פי נוהל</Text>
-                  <View style={styles.scoreDisplay}>
-                    <Text style={styles.scoreDisplayText}>{getRatingScore(workedByProcedure)}</Text>
-                    <Text style={styles.scoreLabel}>נק&apos;</Text>
-                  </View>
-                </View>
+                <Text style={styles.ratingLabel}>עבד על פי נוהל</Text>
                 <View style={styles.ratingButtons}>
-                  {(['מצוין', 'טוב', 'צריך שיפור'] as RatingLevel[]).map((level) => (
-                    <TouchableOpacity
-                      key={level}
-                      style={[
-                        styles.ratingButton,
-                        level === 'מצוין' && styles.ratingButtonExcellent,
-                        level === 'טוב' && styles.ratingButtonGood,
-                        level === 'צריך שיפור' && styles.ratingButtonNeedsWork,
-                        workedByProcedure === level && styles.ratingButtonActive,
-                      ]}
-                      onPress={() => setWorkedByProcedure(level)}
-                      activeOpacity={0.7}
-                    >
-                      <Text
-                        style={[
-                          styles.ratingButtonText,
-                          workedByProcedure === level && styles.ratingButtonTextActive,
-                        ]}
-                      >
-                        {level}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonNeedsWork,
+                      workedByProcedure === 'צריך שיפור' && styles.ratingButtonNeedsWorkActive,
+                    ]}
+                    onPress={() => setWorkedByProcedure('צריך שיפור')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      workedByProcedure === 'צריך שיפור' && styles.ratingButtonTextActive,
+                    ]}>
+                      דרוש שיפור
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonGood,
+                      workedByProcedure === 'טוב' && styles.ratingButtonGoodActive,
+                    ]}
+                    onPress={() => setWorkedByProcedure('טוב')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      workedByProcedure === 'טוב' && styles.ratingButtonTextActive,
+                    ]}>
+                      טוב
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.ratingButton,
+                      styles.ratingButtonExcellent,
+                      workedByProcedure === 'מצוין' && styles.ratingButtonActive,
+                    ]}
+                    onPress={() => setWorkedByProcedure('מצוין')}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[
+                      styles.ratingButtonText,
+                      workedByProcedure === 'מצוין' && styles.ratingButtonTextActive,
+                    ]}>
+                      מצוין
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -1254,7 +1422,10 @@ const styles = StyleSheet.create({
     color: '#DC2626',
   },
   ratingGroup: {
-    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
   },
   ratingHeader: {
     flexDirection: 'row',
@@ -1262,11 +1433,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   ratingLabel: {
-    fontSize: 14,
-    fontWeight: '600' as const,
+    fontSize: 15,
     color: '#374151',
-    flex: 1,
-    textAlign: 'right' as const,
+    lineHeight: 22,
+    marginBottom: 10,
   },
   ratingButtons: {
     flexDirection: 'row',
@@ -1275,9 +1445,11 @@ const styles = StyleSheet.create({
   ratingButton: {
     flex: 1,
     paddingVertical: 10,
+    paddingHorizontal: 12,
     borderRadius: 8,
     borderWidth: 1.5,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   ratingButtonExcellent: {
     backgroundColor: '#D1FAE5',
@@ -1292,13 +1464,20 @@ const styles = StyleSheet.create({
     borderColor: '#FCA5A5',
   },
   ratingButtonActive: {
-    backgroundColor: '#DC2626',
+    backgroundColor: '#10B981',
+    borderColor: '#059669',
+  },
+  ratingButtonGoodActive: {
+    backgroundColor: '#F59E0B',
+    borderColor: '#D97706',
+  },
+  ratingButtonNeedsWorkActive: {
+    backgroundColor: '#EF4444',
     borderColor: '#DC2626',
   },
   ratingButtonText: {
     fontSize: 13,
     fontWeight: '600' as const,
-    color: '#374151',
   },
   ratingButtonTextActive: {
     color: '#FFFFFF',

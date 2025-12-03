@@ -270,10 +270,6 @@ export default function NewExerciseScreen() {
       <span class="info-label">ביטחון המאבטח ועמידה בלחץ:</span>
       <span class="info-value">${confidenceUnderPressure} (${getRatingScore(confidenceUnderPressure)} נק')</span>
     </div>
-    <div class="info-row">
-      <span class="info-label">עבד על פי נוהל:</span>
-      <span class="info-value">${workedByProcedure} (${getRatingScore(workedByProcedure)} נק')</span>
-    </div>
   </div>
 
   <div class="section">
@@ -281,6 +277,14 @@ export default function NewExerciseScreen() {
     <div class="info-row">
       <span class="info-label">ציון הערכת קב"ט:</span>
       <span class="info-value">${kabtEvaluation} מתוך 20 נק'</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">עבודה על פי נוהל</div>
+    <div class="info-row">
+      <span class="info-label">עבד על פי נוהל:</span>
+      <span class="info-value">${workedByProcedure} (${getRatingScore(workedByProcedure)} נק')</span>
     </div>
   </div>
 
@@ -331,6 +335,10 @@ export default function NewExerciseScreen() {
     <div class="score-row">
       <span>הערכת קב"ט:</span>
       <strong>${parseInt(kabtEvaluation) || 0} / 20 נק'</strong>
+    </div>
+    <div class="score-row">
+      <span>עבודה על פי נוהל:</span>
+      <strong>${parseInt(getRatingScore(workedByProcedure))} / 10 נק'</strong>
     </div>
     <div class="total-score">
       ציון סופי: ${calculateTotalScore()} / 100 נק'
@@ -1165,6 +1173,14 @@ export default function NewExerciseScreen() {
                   <View style={styles.totalScoreValue}>
                     <Text style={styles.totalScoreNumber}>{parseInt(kabtEvaluation) || 0}</Text>
                     <Text style={styles.totalScoreText}>מתוך 20 נק&apos;</Text>
+                  </View>
+                </View>
+
+                <View style={styles.totalScoreRow}>
+                  <Text style={styles.totalScoreLabel}>עבודה על פי נוהל:</Text>
+                  <View style={styles.totalScoreValue}>
+                    <Text style={styles.totalScoreNumber}>{parseInt(getRatingScore(workedByProcedure))}</Text>
+                    <Text style={styles.totalScoreText}>מתוך 10 נק&apos;</Text>
                   </View>
                 </View>
 

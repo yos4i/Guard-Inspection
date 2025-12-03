@@ -319,6 +319,22 @@ export default function ExerciseHistoryScreen() {
     </div>
   </div>
 
+  <div class="section">
+    <div class="section-title">הערכת קב"ט</div>
+    <div class="rating-row">
+      <span class="rating-label">ציון הערכת קב"ט:</span>
+      <span class="rating-value" style="background-color: #F59E0B">${exercise.kabtEvaluation || 0} / 20 נק'</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">עבודה על פי נוהל</div>
+    <div class="rating-row">
+      <span class="rating-label">עבד על פי נוהל (${exercise.workedByProcedureScore} נק')</span>
+      <span class="rating-value" style="background-color: ${exercise.workedByProcedure === 'מצוין' ? '#10B981' : exercise.workedByProcedure === 'טוב' ? '#3B82F6' : exercise.workedByProcedure === 'בינוני' ? '#F59E0B' : '#EF4444'}">${exercise.workedByProcedure}</span>
+    </div>
+  </div>
+
   ${exercise.toMaintain || exercise.toImprove || exercise.additionalNotes ? `
   <div class="section">
     <div class="section-title">סיכום מדריך</div>
@@ -558,6 +574,33 @@ export default function ExerciseHistoryScreen() {
                           <View style={[styles.ratingBadge, getRatingColor(item.confidenceUnderPressure)]}>
                             <Text style={styles.ratingBadgeText}>
                               {item.confidenceUnderPressure}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+
+                    <View style={styles.section}>
+                      <Text style={styles.sectionTitle}>הערכת קב&quot;ט</Text>
+                      <View style={styles.sectionContent}>
+                        <View style={styles.kabtEvaluationBox}>
+                          <Text style={styles.kabtEvaluationLabel}>ציון הערכת קב&quot;ט:</Text>
+                          <View style={styles.kabtEvaluationValueBox}>
+                            <Text style={styles.kabtEvaluationValue}>{item.kabtEvaluation || 0}</Text>
+                            <Text style={styles.kabtEvaluationText}>מתוך 20 נק&apos;</Text>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+
+                    <View style={styles.section}>
+                      <Text style={styles.sectionTitle}>עבודה על פי נוהל</Text>
+                      <View style={styles.sectionContent}>
+                        <View style={styles.ratingItem}>
+                          <Text style={styles.ratingLabel}>עבד על פי נוהל ({item.workedByProcedureScore} נק&apos;)</Text>
+                          <View style={[styles.ratingBadge, getRatingColor(item.workedByProcedure)]}>
+                            <Text style={styles.ratingBadgeText}>
+                              {item.workedByProcedure}
                             </Text>
                           </View>
                         </View>
@@ -891,5 +934,33 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700' as const,
     color: '#FFFFFF',
+  },
+  kabtEvaluationBox: {
+    backgroundColor: '#FEF3C7',
+    padding: 12,
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  kabtEvaluationLabel: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: '#78350F',
+  },
+  kabtEvaluationValueBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  kabtEvaluationValue: {
+    fontSize: 20,
+    fontWeight: '700' as const,
+    color: '#F59E0B',
+  },
+  kabtEvaluationText: {
+    fontSize: 13,
+    fontWeight: '600' as const,
+    color: '#92400E',
   },
 });

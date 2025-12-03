@@ -200,7 +200,7 @@ export default function InspectionScreen() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>טופס בקרות למאבטח - ${guard.firstName} ${guard.lastName}</title>
+  <title>טופס ביקורות למאבטח - ${guard.firstName} ${guard.lastName}</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -323,7 +323,7 @@ export default function InspectionScreen() {
 </head>
 <body>
   <div class="header">
-    <h1>טופס בקרות למאבטח</h1>
+    <h1>טופס ביקורות למאבטח</h1>
   </div>
 
   <div class="guard-info">
@@ -333,7 +333,7 @@ export default function InspectionScreen() {
 
   <div class="inspector-info">
     <p><strong>שם הקב"ט המבקר:</strong> ${inspectorName || '---'}</p>
-    <p><strong>תאריך הבקרות:</strong> ${new Date().toLocaleDateString('he-IL')}</p>
+    <p><strong>תאריך הביקורות:</strong> ${new Date().toLocaleDateString('he-IL')}</p>
   </div>
 
   <div class="section">
@@ -442,7 +442,7 @@ export default function InspectionScreen() {
   const handleExport = async () => {
     try {
       const htmlContent = generateHTMLReport();
-      const fileName = `בקרות_${guard.firstName}_${guard.lastName}_${new Date().toISOString().split('T')[0]}.html`;
+      const fileName = `ביקורות_${guard.firstName}_${guard.lastName}_${new Date().toISOString().split('T')[0]}.html`;
 
       if (Platform.OS === 'web') {
         const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
@@ -471,7 +471,7 @@ export default function InspectionScreen() {
 
         await Sharing.shareAsync(fileUri, {
           mimeType: 'text/html',
-          dialogTitle: 'ייצוא טופס בקרות',
+          dialogTitle: 'ייצוא טופס ביקורות',
           UTI: 'public.html',
         });
       }
@@ -507,14 +507,14 @@ export default function InspectionScreen() {
         guardSignature: guardSignature.trim(),
       });
 
-      Alert.alert('הצלחה', 'הבקרות נשמרה בהצלחה', [
+      Alert.alert('הצלחה', 'הביקורות נשמרה בהצלחה', [
         {
           text: 'אישור',
           onPress: () => router.back(),
         },
       ]);
     } catch (error) {
-      Alert.alert('שגיאה', 'נכשל בשמירת הבקרות');
+      Alert.alert('שגיאה', 'נכשל בשמירת הביקורות');
       console.error('Failed to save inspection:', error);
     } finally {
       setIsSubmitting(false);
@@ -528,7 +528,7 @@ export default function InspectionScreen() {
     >
       <Stack.Screen
         options={{
-          title: 'טופס בקרות למאבטח',
+          title: 'טופס ביקורות למאבטח',
           headerBackTitle: 'חזור',
         }}
       />
@@ -539,7 +539,7 @@ export default function InspectionScreen() {
       >
         <View style={styles.header}>
           <ClipboardCheck size={48} color="#2563EB" strokeWidth={1.5} />
-          <Text style={styles.title}>טופס בקרות למאבטח</Text>
+          <Text style={styles.title}>טופס ביקורות למאבטח</Text>
           <View style={styles.guardInfoCard}>
             <Text style={styles.guardName}>
               {guard.firstName} {guard.lastName}
@@ -864,7 +864,7 @@ export default function InspectionScreen() {
             >
               <CheckCircle2 size={20} color="#FFFFFF" />
               <Text style={styles.submitButtonText}>
-                {isSubmitting ? 'שומר...' : 'שמור בקרות'}
+                {isSubmitting ? 'שומר...' : 'שמור ביקורות'}
               </Text>
             </TouchableOpacity>
           </View>

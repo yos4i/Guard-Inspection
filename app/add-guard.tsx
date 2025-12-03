@@ -65,14 +65,14 @@ export default function AddGuardScreen() {
         phone: phone.trim(),
       });
 
-      Alert.alert('הצלחה', 'הבקרות נוספה בהצלחה', [
+      Alert.alert('הצלחה', 'הביקורות נוספה בהצלחה', [
         {
           text: 'אישור',
           onPress: () => router.back(),
         },
       ]);
     } catch (error) {
-      Alert.alert('שגיאה', 'נכשל בהוספת בקרות');
+      Alert.alert('שגיאה', 'נכשל בהוספת ביקורות');
       console.error('Failed to add guard:', error);
     } finally {
       setIsSubmitting(false);
@@ -86,7 +86,7 @@ export default function AddGuardScreen() {
     >
       <Stack.Screen
         options={{
-          title: 'הוסף בקרות',
+          title: 'הוסף ביקורות',
           headerBackTitle: 'ביטול',
         }}
       />
@@ -99,9 +99,9 @@ export default function AddGuardScreen() {
           <UserPlus size={60} color="#2563EB" strokeWidth={1.5} />
         </View>
 
-        <Text style={styles.title}>פרטי בקרות חדשה</Text>
+        <Text style={styles.title}>פרטי ביקורות חדשה</Text>
         <Text style={styles.subtitle}>
-          בקרות: {guards.length}
+          ביקורות: {guards.length}
         </Text>
 
         <View style={styles.form}>
@@ -161,7 +161,7 @@ export default function AddGuardScreen() {
             disabled={isSubmitting}
           >
             <Text style={styles.submitButtonText}>
-              {isSubmitting ? 'שומר...' : 'הוסף בקרות'}
+              {isSubmitting ? 'שומר...' : 'הוסף ביקורות'}
             </Text>
           </TouchableOpacity>
         </View>

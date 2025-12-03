@@ -23,7 +23,7 @@ interface CategoryTab {
 }
 
 const categories: CategoryTab[] = [
-  { id: 'guards', title: 'בקרות', icon: Shield, color: '#2563EB' },
+  { id: 'guards', title: 'ביקורות', icon: Shield, color: '#2563EB' },
   { id: 'exercises', title: 'תרגילים', icon: Dumbbell, color: '#DC2626' },
 ];
 
@@ -69,7 +69,7 @@ export default function RemindersScreen() {
 
     return (
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>כל הבקרות</Text>
+        <Text style={styles.sectionTitle}>כל הביקורות</Text>
         <FlatList
           data={reminders}
           scrollEnabled={false}
@@ -116,7 +116,7 @@ export default function RemindersScreen() {
                     <Text style={styles.guardId}>ת.ז: {item.guard.idNumber}</Text>
                     {item.lastInspection && (
                       <Text style={styles.lastInspectionText}>
-                        בקרות אחרונה:{' '}
+                        ביקורות אחרונה:{' '}
                         {new Date(item.lastInspection).toLocaleDateString('he-IL')}
                       </Text>
                     )}
@@ -143,7 +143,7 @@ export default function RemindersScreen() {
 
     return (
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>כל הבקרות</Text>
+        <Text style={styles.sectionTitle}>כל הביקורות</Text>
         <FlatList
           data={sortedGuardsByExercise}
           scrollEnabled={false}

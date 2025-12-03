@@ -19,7 +19,7 @@ export default function GuardsScreen() {
 
   const handleDelete = (guardId: string, name: string) => {
     Alert.alert(
-      'מחיקת בקרות',
+      'מחיקת ביקורות',
       `האם אתה בטוח שברצונך למחוק את ${name}?`,
       [
         { text: 'ביטול', style: 'cancel' },
@@ -56,7 +56,7 @@ export default function GuardsScreen() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: 'בקרות',
+          title: 'ביקורות',
           headerTitleAlign: 'center',
           headerLeft: () => (
             <TouchableOpacity
@@ -72,8 +72,8 @@ export default function GuardsScreen() {
       {guards.length === 0 ? (
         <View style={styles.emptyContainer}>
           <UserCircle size={80} color="#D1D5DB" strokeWidth={1.5} />
-          <Text style={styles.emptyTitle}>אין בקרות במערכת</Text>
-          <Text style={styles.emptyText}>הוסף בקרות ראשונה על ידי לחיצה על כפתור +</Text>
+          <Text style={styles.emptyTitle}>אין ביקורות במערכת</Text>
+          <Text style={styles.emptyText}>הוסף ביקורות ראשונה על ידי לחיצה על כפתור +</Text>
         </View>
       ) : (
         <FlatList
@@ -120,7 +120,7 @@ export default function GuardsScreen() {
                     onPress={() => router.push(`/inspection?guardId=${item.id}`)}
                   >
                     <ClipboardList size={18} color="#FFFFFF" />
-                    <Text style={styles.inspectButtonText}>בקרות חדשה</Text>
+                    <Text style={styles.inspectButtonText}>ביקורות חדשה</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -128,7 +128,7 @@ export default function GuardsScreen() {
                   style={styles.historyButton}
                   onPress={() => router.push(`/history?guardId=${item.id}`)}
                 >
-                  <Text style={styles.historyButtonText}>היסטוריית בקרות</Text>
+                  <Text style={styles.historyButtonText}>היסטוריית ביקורות</Text>
                 </TouchableOpacity>
               </View>
             );
@@ -139,7 +139,7 @@ export default function GuardsScreen() {
       {guards.length > 0 && guards.length >= 25 && (
         <View style={styles.warningContainer}>
           <Text style={styles.warningText}>
-            הגעת למגבלת {guards.length}/30 בקרות
+            הגעת למגבלת {guards.length}/30 ביקורות
           </Text>
         </View>
       )}

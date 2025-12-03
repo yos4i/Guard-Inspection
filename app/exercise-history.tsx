@@ -5,10 +5,14 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Platform,
+  Alert,
 } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
 import { useGuards } from '@/contexts/GuardsProvider';
-import { Dumbbell, ChevronDown, ChevronUp, Trash2 } from 'lucide-react-native';
+import { Dumbbell, ChevronDown, ChevronUp, Trash2, Download } from 'lucide-react-native';
 
 export default function ExerciseHistoryScreen() {
   const { guardId } = useLocalSearchParams<{ guardId: string }>();
@@ -78,6 +82,322 @@ export default function ExerciseHistoryScreen() {
       return '#F59E0B';
     } else {
       return '#000000';
+    }
+  };
+
+  const generateHTMLReport = (exercise: any) => {
+    const totalScore = calculateTotalScore(exercise);
+    const scoreColor = getScoreColor(totalScore);
+
+    return `<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>טופס תרגיל למאבטח - ${guard.firstName} ${guard.lastName}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f9fafb;
+    }
+    .header {
+      text-align: center;
+      background-color: #10B981;
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      margin: 0 0 15px 0;
+      font-size: 28px;
+    }
+    .guard-info {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .guard-info h2 {
+      margin: 0 0 10px 0;
+      color: #1F2937;
+    }
+    .instructor-info {
+      background-color: #D1FAE5;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .section {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #10B981;
+      border-bottom: 2px solid #10B981;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .scenario-box {
+      background-color: #F9FAFB;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-right: 4px solid #10B981;
+    }
+    .scenario-text {
+      color: #374151;
+      line-height: 1.6;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #E5E7EB;
+    }
+    .check-item:last-child {
+      border-bottom: none;
+    }
+    .check-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      margin-left: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .check-icon.checked {
+      background-color: #10B981;
+      color: white;
+    }
+    .check-icon.unchecked {
+      background-color: #E5E7EB;
+      border: 2px solid #D1D5DB;
+    }
+    .rating-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #E5E7EB;
+    }
+    .rating-row:last-child {
+      border-bottom: none;
+    }
+    .rating-label {
+      font-weight: 500;
+      color: #374151;
+    }
+    .rating-value {
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 6px;
+      color: white;
+    }
+    .score-summary {
+      background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+      padding: 25px;
+      border-radius: 12px;
+      margin-top: 30px;
+      border: 2px solid #10B981;
+      text-align: center;
+    }
+    .total-score {
+      font-size: 48px;
+      font-weight: bold;
+      color: ${scoreColor};
+      margin: 15px 0;
+    }
+    .score-label {
+      font-size: 18px;
+      color: #374151;
+    }
+    .summary-item {
+      background-color: #FFFBEB;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      border-right: 4px solid #F59E0B;
+    }
+    .summary-label {
+      font-weight: bold;
+      color: #374151;
+      margin-bottom: 5px;
+    }
+    .summary-text {
+      color: #6B7280;
+      line-height: 1.5;
+    }
+    .signature-section {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #F9FAFB;
+      border-radius: 8px;
+    }
+    .date {
+      text-align: center;
+      color: #6B7280;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>טופס תרגיל למאבטח</h1>
+  </div>
+
+  <div class="guard-info">
+    <h2>${guard.firstName} ${guard.lastName}</h2>
+    <p><strong>ת.ז:</strong> ${guard.idNumber}</p>
+  </div>
+
+  <div class="instructor-info">
+    <p><strong>שם המדריך:</strong> ${exercise.instructorName || '---'}</p>
+    <p><strong>תאריך התרגיל:</strong> ${new Date(exercise.date).toLocaleDateString('he-IL')}</p>
+    <p><strong>סוג התרגיל:</strong> ${exercise.exerciseType}</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">תיאור התרחיש</div>
+    <div class="scenario-box">
+      <p class="scenario-text">${exercise.scenarioDescription}</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">תגובת המאבטח</div>
+    <div class="check-item">
+      <span class="check-icon ${exercise.identifiedThreat ? 'checked' : 'unchecked'}">
+        ${exercise.identifiedThreat ? '✓' : ''}
+      </span>
+      <span>זיהוי האיום / חשוד (${exercise.identifiedThreatScore} נק')</span>
+    </div>
+    <div class="check-item">
+      <span class="check-icon ${exercise.reportedOnRadio ? 'checked' : 'unchecked'}">
+        ${exercise.reportedOnRadio ? '✓' : ''}
+      </span>
+      <span>דיווח בקשר (${exercise.reportedOnRadioScore} נק')</span>
+    </div>
+    <div class="check-item">
+      <span class="check-icon ${exercise.updatedKabt ? 'checked' : 'unchecked'}">
+        ${exercise.updatedKabt ? '✓' : ''}
+      </span>
+      <span>עדכון קב"ט (${exercise.updatedKabtScore} נק')</span>
+    </div>
+    <div class="check-item">
+      <span class="check-icon ${exercise.updatedCoordinator ? 'checked' : 'unchecked'}">
+        ${exercise.updatedCoordinator ? '✓' : ''}
+      </span>
+      <span>עדכון רכז ביטחון / מנהל (${exercise.updatedCoordinatorScore} נק')</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">הערכה מקצועית</div>
+    <div class="rating-row">
+      <span class="rating-label">מהירות תגובה (${exercise.responseSpeedScore} נק')</span>
+      <span class="rating-value" style="background-color: ${exercise.responseSpeed === 'מצוין' ? '#10B981' : exercise.responseSpeed === 'טוב' ? '#3B82F6' : exercise.responseSpeed === 'בינוני' ? '#F59E0B' : '#EF4444'}">${exercise.responseSpeed}</span>
+    </div>
+    <div class="rating-row">
+      <span class="rating-label">רמת שליטה במצב (${exercise.situationControlScore} נק')</span>
+      <span class="rating-value" style="background-color: ${exercise.situationControl === 'מצוין' ? '#10B981' : exercise.situationControl === 'טוב' ? '#3B82F6' : exercise.situationControl === 'בינוני' ? '#F59E0B' : '#EF4444'}">${exercise.situationControl}</span>
+    </div>
+    <div class="rating-row">
+      <span class="rating-label">ביטחון ועמידה בלחץ (${exercise.confidenceUnderPressureScore} נק')</span>
+      <span class="rating-value" style="background-color: ${exercise.confidenceUnderPressure === 'מצוין' ? '#10B981' : exercise.confidenceUnderPressure === 'טוב' ? '#3B82F6' : exercise.confidenceUnderPressure === 'בינוני' ? '#F59E0B' : '#EF4444'}">${exercise.confidenceUnderPressure}</span>
+    </div>
+  </div>
+
+  ${exercise.toMaintain || exercise.toImprove || exercise.additionalNotes ? `
+  <div class="section">
+    <div class="section-title">סיכום מדריך</div>
+    ${exercise.toMaintain ? `
+    <div class="summary-item">
+      <div class="summary-label">לשימור:</div>
+      <div class="summary-text">${exercise.toMaintain}</div>
+    </div>
+    ` : ''}
+    ${exercise.toImprove ? `
+    <div class="summary-item">
+      <div class="summary-label">לשיפור:</div>
+      <div class="summary-text">${exercise.toImprove}</div>
+    </div>
+    ` : ''}
+    ${exercise.additionalNotes ? `
+    <div class="summary-item">
+      <div class="summary-label">הערות נוספות:</div>
+      <div class="summary-text">${exercise.additionalNotes}</div>
+    </div>
+    ` : ''}
+  </div>
+  ` : ''}
+
+  <div class="score-summary">
+    <div class="score-label">ציון כולל:</div>
+    <div class="total-score">${totalScore}</div>
+  </div>
+
+  <div class="signature-section">
+    <p><strong>חתימת המאבטח:</strong> ${exercise.guardSignature || '_______________'}</p>
+  </div>
+
+  <div class="date">
+    מסמך זה הופק ב-${new Date().toLocaleDateString('he-IL')} ${new Date().toLocaleTimeString('he-IL')}
+  </div>
+</body>
+</html>`;
+  };
+
+  const handleExport = async (exercise: any) => {
+    try {
+      const htmlContent = generateHTMLReport(exercise);
+      const fileName = `תרגיל_${guard.firstName}_${guard.lastName}_${new Date(exercise.date).toISOString().split('T')[0]}.html`;
+
+      if (Platform.OS === 'web') {
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        Alert.alert('הצלחה', 'הקובץ יוצא בהצלחה');
+      } else {
+        const isAvailable = await Sharing.isAvailableAsync();
+        if (!isAvailable) {
+          Alert.alert('שגיאה', 'שיתוף קבצים אינו זמין במכשיר זה');
+          return;
+        }
+
+        const fsAny = FileSystem as any;
+        if (!fsAny.documentDirectory) {
+          throw new Error('Document directory not available');
+        }
+        const fileUri = fsAny.documentDirectory + fileName;
+        await fsAny.writeAsStringAsync(fileUri, htmlContent);
+
+        await Sharing.shareAsync(fileUri, {
+          mimeType: 'text/html',
+          dialogTitle: 'ייצוא טופס תרגיל',
+          UTI: 'public.html',
+        });
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      Alert.alert('שגיאה', 'נכשל בייצוא הקובץ');
     }
   };
 
@@ -275,18 +595,29 @@ export default function ExerciseHistoryScreen() {
                       </View>
                     ) : null}
 
-                    <TouchableOpacity
-                      style={styles.deleteButton}
-                      activeOpacity={0.7}
-                      onPress={() => {
-                        if (confirm('האם אתה בטוח שברצונך למחוק תרגיל זה?')) {
-                          deleteExercise(item.id);
-                        }
-                      }}
-                    >
-                      <Trash2 size={18} color="#FFFFFF" strokeWidth={2} />
-                      <Text style={styles.deleteButtonText}>מחק תרגיל</Text>
-                    </TouchableOpacity>
+                    <View style={styles.actionButtonsContainer}>
+                      <TouchableOpacity
+                        style={styles.exportButton}
+                        activeOpacity={0.7}
+                        onPress={() => handleExport(item)}
+                      >
+                        <Download size={18} color="#10B981" strokeWidth={2} />
+                        <Text style={styles.exportButtonText}>ייצא קובץ</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        style={styles.deleteButton}
+                        activeOpacity={0.7}
+                        onPress={() => {
+                          if (confirm('האם אתה בטוח שברצונך למחוק תרגיל זה?')) {
+                            deleteExercise(item.id);
+                          }
+                        }}
+                      >
+                        <Trash2 size={18} color="#FFFFFF" strokeWidth={2} />
+                        <Text style={styles.deleteButtonText}>מחק תרגיל</Text>
+                      </TouchableOpacity>
+                    </View>
                   </>
                 )}
               </View>
@@ -512,7 +843,36 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 24,
   },
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 16,
+  },
+  exportButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    gap: 8,
+    borderWidth: 2,
+    borderColor: '#10B981',
+    shadowColor: '#10B981',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  exportButtonText: {
+    fontSize: 15,
+    fontWeight: '700' as const,
+    color: '#10B981',
+  },
   deleteButton: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -520,7 +880,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
-    marginTop: 16,
     gap: 8,
     shadowColor: '#DC2626',
     shadowOffset: { width: 0, height: 2 },

@@ -105,7 +105,7 @@ export default function ExerciseHistoryScreen() {
     }
     .header {
       text-align: center;
-      background-color: #10B981;
+      background-color: #DC2626;
       color: white;
       padding: 30px;
       border-radius: 12px;
@@ -127,7 +127,7 @@ export default function ExerciseHistoryScreen() {
       color: #1F2937;
     }
     .instructor-info {
-      background-color: #D1FAE5;
+      background-color: #FEE2E2;
       padding: 15px;
       border-radius: 8px;
       margin-bottom: 20px;
@@ -142,8 +142,8 @@ export default function ExerciseHistoryScreen() {
     .section-title {
       font-size: 20px;
       font-weight: bold;
-      color: #10B981;
-      border-bottom: 2px solid #10B981;
+      color: #DC2626;
+      border-bottom: 2px solid #DC2626;
       padding-bottom: 10px;
       margin-bottom: 20px;
     }
@@ -152,7 +152,7 @@ export default function ExerciseHistoryScreen() {
       padding: 15px;
       border-radius: 8px;
       margin-bottom: 20px;
-      border-right: 4px solid #10B981;
+      border-right: 4px solid #DC2626;
     }
     .scenario-text {
       color: #374151;
@@ -178,7 +178,7 @@ export default function ExerciseHistoryScreen() {
       font-size: 14px;
     }
     .check-icon.checked {
-      background-color: #10B981;
+      background-color: #DC2626;
       color: white;
     }
     .check-icon.unchecked {
@@ -205,11 +205,11 @@ export default function ExerciseHistoryScreen() {
       color: white;
     }
     .score-summary {
-      background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+      background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
       padding: 25px;
       border-radius: 12px;
       margin-top: 30px;
-      border: 2px solid #10B981;
+      border: 2px solid #DC2626;
       text-align: center;
     }
     .total-score {
@@ -223,11 +223,11 @@ export default function ExerciseHistoryScreen() {
       color: #374151;
     }
     .summary-item {
-      background-color: #FFFBEB;
+      background-color: #FEF2F2;
       padding: 15px;
       border-radius: 8px;
       margin: 10px 0;
-      border-right: 4px solid #F59E0B;
+      border-right: 4px solid #DC2626;
     }
     .summary-label {
       font-weight: bold;

@@ -577,6 +577,14 @@ export default function ExerciseHistoryScreen() {
                             </Text>
                           </View>
                         </View>
+                        <View style={styles.ratingItem}>
+                          <Text style={styles.ratingLabel}>עבד על פי נוהל ({item.workedByProcedureScore} נק&apos;)</Text>
+                          <View style={[styles.ratingBadge, getRatingColor(item.workedByProcedure)]}>
+                            <Text style={styles.ratingBadgeText}>
+                              {item.workedByProcedure}
+                            </Text>
+                          </View>
+                        </View>
                       </View>
                     </View>
 
@@ -588,20 +596,6 @@ export default function ExerciseHistoryScreen() {
                           <View style={styles.kabtEvaluationValueBox}>
                             <Text style={styles.kabtEvaluationValue}>{item.kabtEvaluation || 0}</Text>
                             <Text style={styles.kabtEvaluationText}>מתוך 20 נק&apos;</Text>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-
-                    <View style={styles.section}>
-                      <Text style={styles.sectionTitle}>עבודה על פי נוהל</Text>
-                      <View style={styles.sectionContent}>
-                        <View style={styles.ratingItem}>
-                          <Text style={styles.ratingLabel}>עבד על פי נוהל ({item.workedByProcedureScore} נק&apos;)</Text>
-                          <View style={[styles.ratingBadge, getRatingColor(item.workedByProcedure)]}>
-                            <Text style={styles.ratingBadgeText}>
-                              {item.workedByProcedure}
-                            </Text>
                           </View>
                         </View>
                       </View>

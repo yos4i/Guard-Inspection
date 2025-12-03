@@ -19,7 +19,7 @@ export default function GuardsScreen() {
 
   const handleDelete = (guardId: string, name: string) => {
     Alert.alert(
-      'מחיקת בקרה',
+      'מחיקת בקרות',
       `האם אתה בטוח שברצונך למחוק את ${name}?`,
       [
         { text: 'ביטול', style: 'cancel' },
@@ -56,7 +56,7 @@ export default function GuardsScreen() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: 'בקרה',
+          title: 'בקרות',
           headerTitleAlign: 'center',
           headerLeft: () => (
             <TouchableOpacity
@@ -73,7 +73,7 @@ export default function GuardsScreen() {
         <View style={styles.emptyContainer}>
           <UserCircle size={80} color="#D1D5DB" strokeWidth={1.5} />
           <Text style={styles.emptyTitle}>אין בקרות במערכת</Text>
-          <Text style={styles.emptyText}>הוסף בקרה ראשונה על ידי לחיצה על כפתור +</Text>
+          <Text style={styles.emptyText}>הוסף בקרות ראשונה על ידי לחיצה על כפתור +</Text>
         </View>
       ) : (
         <FlatList
@@ -120,7 +120,7 @@ export default function GuardsScreen() {
                     onPress={() => router.push(`/inspection?guardId=${item.id}`)}
                   >
                     <ClipboardList size={18} color="#FFFFFF" />
-                    <Text style={styles.inspectButtonText}>בקרה חדשה</Text>
+                    <Text style={styles.inspectButtonText}>בקרות חדשה</Text>
                   </TouchableOpacity>
                 </View>
 

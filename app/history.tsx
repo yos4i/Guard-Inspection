@@ -26,7 +26,7 @@ export default function HistoryScreen() {
   if (!guard) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>בקרה לא נמצאה</Text>
+        <Text style={styles.errorText}>בקרות לא נמצאה</Text>
       </View>
     );
   }
@@ -93,7 +93,7 @@ export default function HistoryScreen() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>טופס בקרה - ${guard.firstName} ${guard.lastName}</title>
+  <title>טופס בקרות - ${guard.firstName} ${guard.lastName}</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -216,7 +216,7 @@ export default function HistoryScreen() {
 </head>
 <body>
   <div class="header">
-    <h1>טופס בקרה</h1>
+    <h1>טופס בקרות</h1>
   </div>
 
   <div class="guard-info">
@@ -226,7 +226,7 @@ export default function HistoryScreen() {
 
   <div class="inspector-info">
     <p><strong>שם הקב"ט המבקר:</strong> ${inspection.inspectorName || '---'}</p>
-    <p><strong>תאריך הבקרה:</strong> ${new Date(inspection.date).toLocaleDateString('he-IL')}</p>
+    <p><strong>תאריך הבקרות:</strong> ${new Date(inspection.date).toLocaleDateString('he-IL')}</p>
   </div>
 
   <div class="section">
@@ -323,7 +323,7 @@ export default function HistoryScreen() {
   const handleExport = async (inspection: any) => {
     try {
       const htmlContent = generateHTMLReport(inspection);
-      const fileName = `בקרה_${guard.firstName}_${guard.lastName}_${new Date(inspection.date).toISOString().split('T')[0]}.html`;
+      const fileName = `בקרות_${guard.firstName}_${guard.lastName}_${new Date(inspection.date).toISOString().split('T')[0]}.html`;
 
       if (Platform.OS === 'web') {
         const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
@@ -352,7 +352,7 @@ export default function HistoryScreen() {
 
         await Sharing.shareAsync(fileUri, {
           mimeType: 'text/html',
-          dialogTitle: 'ייצוא טופס בקרה',
+          dialogTitle: 'ייצוא טופס בקרות',
           UTI: 'public.html',
         });
       }
@@ -604,13 +604,13 @@ export default function HistoryScreen() {
                         style={styles.deleteButton}
                         activeOpacity={0.7}
                         onPress={() => {
-                          if (confirm('האם אתה בטוח שברצונך למחוק בקרה זו?')) {
+                          if (confirm('האם אתה בטוח שברצונך למחוק בקרות זו?')) {
                             deleteInspection(item.id);
                           }
                         }}
                       >
                         <Trash2 size={18} color="#FFFFFF" strokeWidth={2} />
-                        <Text style={styles.deleteButtonText}>מחק בקרה</Text>
+                        <Text style={styles.deleteButtonText}>מחק בקרות</Text>
                       </TouchableOpacity>
                     </View>
                   </>

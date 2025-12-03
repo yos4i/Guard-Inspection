@@ -23,7 +23,7 @@ interface CategoryTab {
 }
 
 const categories: CategoryTab[] = [
-  { id: 'guards', title: 'בקרה', icon: Shield, color: '#2563EB' },
+  { id: 'guards', title: 'בקרות', icon: Shield, color: '#2563EB' },
   { id: 'exercises', title: 'תרגילים', icon: Dumbbell, color: '#DC2626' },
 ];
 
@@ -116,7 +116,7 @@ export default function RemindersScreen() {
                     <Text style={styles.guardId}>ת.ז: {item.guard.idNumber}</Text>
                     {item.lastInspection && (
                       <Text style={styles.lastInspectionText}>
-                        בקרה אחרונה:{' '}
+                        בקרות אחרונה:{' '}
                         {new Date(item.lastInspection).toLocaleDateString('he-IL')}
                       </Text>
                     )}

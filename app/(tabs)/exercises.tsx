@@ -6,15 +6,31 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
-import { Dumbbell, Timer, UserCircle } from 'lucide-react-native';
+import { Dumbbell, UserCircle, Trash2 } from 'lucide-react-native';
 import { useGuards, useSortedGuardsByExercise } from '@/contexts/GuardsProvider';
 
 export default function ExercisesScreen() {
-  const { isLoading, getLastExerciseDate, getGuardExercises } = useGuards();
+  const { isLoading, getLastExerciseDate, getGuardExercises, deleteGuard } = useGuards();
   const guards = useSortedGuardsByExercise();
   const router = useRouter();
+
+  const handleDelete = (guardId: string, name: string) => {
+    Alert.alert(
+      'מחיקת מאבטח',
+      `האם אתה בטוח שברצונך למחוק את ${name}?`,
+      [
+        { text: 'ביטול', style: 'cancel' },
+        {
+          text: 'מחק',
+          style: 'destructive',
+          onPress: () => deleteGuard(guardId),
+        },
+      ]
+    );
+  };
 
   if (isLoading) {
     return (
@@ -75,18 +91,6 @@ export default function ExercisesScreen() {
             return (
               <View style={styles.card}>
                 <View style={styles.cardHeader}>
-                  <View
-                    style={[
-                      styles.timerContainer,
-                      { backgroundColor: timerColor + '15', borderColor: timerColor },
-                    ]}
-                  >
-                    <Timer size={20} color={timerColor} strokeWidth={2.5} />
-                    <Text style={[styles.timerDays, { color: timerColor }]}>
-                      {daysRemaining}
-                    </Text>
-                    <Text style={[styles.timerLabel, { color: timerColor }]}>ימים</Text>
-                  </View>
                   <View style={styles.guardInfo}>
                     <View style={styles.iconContainer}>
                       <UserCircle size={40} color="#2563EB" strokeWidth={1.5} />
@@ -96,17 +100,25 @@ export default function ExercisesScreen() {
                         {item.firstName} {item.lastName}
                       </Text>
                       <Text style={styles.guardId}>ת.ז: {item.idNumber}</Text>
-                      {lastExercise && (
-                        <Text style={styles.lastExerciseText}>
-                          תרגיל אחרון:{' '}
-                          {new Date(lastExercise).toLocaleDateString('he-IL')}
-                        </Text>
-                      )}
+                      <Text style={styles.guardPhone}>טלפון: {item.phone}</Text>
                     </View>
                   </View>
+                  <TouchableOpacity
+                    onPress={() => handleDelete(item.id, `${item.firstName} ${item.lastName}`)}
+                    style={styles.deleteButton}
+                  >
+                    <Trash2 size={20} color="#DC2626" />
+                  </TouchableOpacity>
                 </View>
 
-                <View style={styles.actionContainer}>
+                <View style={styles.statusContainer}>
+                  <View style={[styles.statusBadge, { backgroundColor: timerColor + '20' }]}>
+                    <View style={[styles.statusDot, { backgroundColor: timerColor }]} />
+                    <Text style={[styles.statusText, { color: timerColor }]}>
+                      {daysRemaining} ימים
+                    </Text>
+                  </View>
+
                   <TouchableOpacity
                     style={styles.newExerciseButton}
                     onPress={() => {
@@ -184,62 +196,64 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: 12,
   },
   guardInfo: {
     flexDirection: 'row',
     flex: 1,
-    alignItems: 'flex-start',
   },
   iconContainer: {
     marginLeft: 12,
   },
   guardDetails: {
     flex: 1,
-    alignItems: 'flex-end',
   },
   guardName: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600' as const,
     color: '#1F2937',
     marginBottom: 4,
   },
   guardId: {
-    fontSize: 13,
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 2,
+  },
+  guardPhone: {
+    fontSize: 14,
     color: '#6B7280',
   },
-  lastExerciseText: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    marginTop: 2,
+  deleteButton: {
+    padding: 8,
   },
-  timerContainer: {
+  statusContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 8,
+    marginBottom: 12,
+  },
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 12,
-    borderRadius: 12,
-    borderWidth: 2,
-    minWidth: 70,
+    paddingVertical: 6,
+    borderRadius: 8,
   },
-  timerDays: {
-    fontSize: 22,
-    fontWeight: '700' as const,
-    marginTop: 2,
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginLeft: 6,
   },
-  timerLabel: {
-    fontSize: 11,
+  statusText: {
+    fontSize: 14,
     fontWeight: '600' as const,
-    marginTop: 1,
-  },
-  actionContainer: {
-    alignItems: 'flex-end',
   },
   newExerciseButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#DC2626',
+    backgroundColor: '#2563EB',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,

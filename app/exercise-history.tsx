@@ -317,6 +317,10 @@ export default function ExerciseHistoryScreen() {
       <span class="rating-label">ביטחון ועמידה בלחץ (${exercise.confidenceUnderPressureScore} נק')</span>
       <span class="rating-value" style="background-color: ${exercise.confidenceUnderPressure === 'מצוין' ? '#10B981' : exercise.confidenceUnderPressure === 'טוב' ? '#3B82F6' : exercise.confidenceUnderPressure === 'בינוני' ? '#F59E0B' : '#EF4444'}">${exercise.confidenceUnderPressure}</span>
     </div>
+    <div class="rating-row">
+      <span class="rating-label">עבד על פי נוהל (${exercise.workedByProcedureScore} נק')</span>
+      <span class="rating-value" style="background-color: ${exercise.workedByProcedure === 'מצוין' ? '#10B981' : exercise.workedByProcedure === 'טוב' ? '#3B82F6' : exercise.workedByProcedure === 'בינוני' ? '#F59E0B' : '#EF4444'}">${exercise.workedByProcedure}</span>
+    </div>
   </div>
 
   <div class="section">
@@ -324,14 +328,6 @@ export default function ExerciseHistoryScreen() {
     <div class="rating-row">
       <span class="rating-label">ציון הערכת קב"ט:</span>
       <span class="rating-value" style="background-color: #F59E0B">${exercise.kabtEvaluation || 0} / 20 נק'</span>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">עבודה על פי נוהל</div>
-    <div class="rating-row">
-      <span class="rating-label">עבד על פי נוהל (${exercise.workedByProcedureScore} נק')</span>
-      <span class="rating-value" style="background-color: ${exercise.workedByProcedure === 'מצוין' ? '#10B981' : exercise.workedByProcedure === 'טוב' ? '#3B82F6' : exercise.workedByProcedure === 'בינוני' ? '#F59E0B' : '#EF4444'}">${exercise.workedByProcedure}</span>
     </div>
   </div>
 

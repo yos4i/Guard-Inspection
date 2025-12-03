@@ -601,7 +601,7 @@ export default function ExerciseHistoryScreen() {
                         activeOpacity={0.7}
                         onPress={() => handleExport(item)}
                       >
-                        <Download size={18} color="#10B981" strokeWidth={2} />
+                        <Download size={18} color="#2563EB" strokeWidth={2} />
                         <Text style={styles.exportButtonText}>ייצא קובץ</Text>
                       </TouchableOpacity>
 
@@ -859,8 +859,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     gap: 8,
     borderWidth: 2,
-    borderColor: '#10B981',
-    shadowColor: '#10B981',
+    borderColor: '#2563EB',
+    shadowColor: '#2563EB',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
@@ -869,7 +869,7 @@ const styles = StyleSheet.create({
   exportButtonText: {
     fontSize: 15,
     fontWeight: '700' as const,
-    color: '#10B981',
+    color: '#2563EB',
   },
   deleteButton: {
     flex: 1,

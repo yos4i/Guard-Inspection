@@ -270,6 +270,10 @@ export default function NewExerciseScreen() {
       <span class="info-label">ביטחון המאבטח ועמידה בלחץ:</span>
       <span class="info-value">${confidenceUnderPressure} (${getRatingScore(confidenceUnderPressure)} נק')</span>
     </div>
+    <div class="info-row">
+      <span class="info-label">עבד על פי נוהל:</span>
+      <span class="info-value">${workedByProcedure} (${getRatingScore(workedByProcedure)} נק')</span>
+    </div>
   </div>
 
   <div class="section">
@@ -277,14 +281,6 @@ export default function NewExerciseScreen() {
     <div class="info-row">
       <span class="info-label">ציון הערכת קב"ט:</span>
       <span class="info-value">${kabtEvaluation} מתוך 20 נק'</span>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">עבודה על פי נוהל</div>
-    <div class="info-row">
-      <span class="info-label">עבד על פי נוהל:</span>
-      <span class="info-value">${workedByProcedure} (${getRatingScore(workedByProcedure)} נק')</span>
     </div>
   </div>
 

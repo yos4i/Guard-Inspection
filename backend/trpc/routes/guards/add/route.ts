@@ -1,5 +1,5 @@
 import { protectedProcedure } from "../../../create-context";
-import { database, generateId } from "@/backend/database";
+import { db, guards, generateId } from "@/backend/database";
 import { z } from "zod";
 
 const addGuardInput = z.object({
@@ -15,6 +15,6 @@ export default protectedProcedure.input(addGuardInput).mutation(({ input }) => {
     id: generateId(),
     createdAt: new Date().toISOString(),
   };
-  database.guards.push(newGuard);
+  db.insert(guards).values(newGuard).run();
   return newGuard;
 });

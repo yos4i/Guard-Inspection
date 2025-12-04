@@ -1,6 +1,6 @@
 import { protectedProcedure } from "../../../create-context";
-import { database } from "@/backend/database";
+import { db, guards } from "@/backend/database";
 
 export default protectedProcedure.query(() => {
-  return database.guards;
+  return db.select().from(guards).all();
 });

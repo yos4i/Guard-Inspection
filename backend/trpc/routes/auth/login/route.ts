@@ -1,6 +1,7 @@
 import { publicProcedure } from "../../../create-context";
-import { database } from "@/backend/database";
+import { db, users } from "@/backend/database";
 import { z } from "zod";
+import { eq } from "drizzle-orm";
 
 const loginInput = z.object({
   username: z.string(),
@@ -8,13 +9,9 @@ const loginInput = z.object({
 });
 
 export default publicProcedure.input(loginInput).mutation(({ input }) => {
-  const user = database.users.find(
-    u => u.username === input.username && u.password === input.password
-  );
-  
-  if (!user) {
-    throw new Error('Invalid credentials');
+  const user = db.select().from(users).where(eq(users.username, input.username)).get();
+  if (user && user.password === input.password) {
+    return { success: true, token: user.token };
   }
-  
-  return { token: user.token, username: user.username };
+  throw new Error('שם משתמש או סיסמה שגויים');
 });

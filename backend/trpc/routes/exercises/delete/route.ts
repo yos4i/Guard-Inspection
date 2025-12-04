@@ -1,12 +1,13 @@
 import { protectedProcedure } from "../../../create-context";
-import { database } from "@/backend/database";
+import { db, exercises } from "@/backend/database";
 import { z } from "zod";
+import { eq } from "drizzle-orm";
 
 const deleteExerciseInput = z.object({
   exerciseId: z.string(),
 });
 
 export default protectedProcedure.input(deleteExerciseInput).mutation(({ input }) => {
-  database.exercises = database.exercises.filter(e => e.id !== input.exerciseId);
+  db.delete(exercises).where(eq(exercises.id, input.exerciseId)).run();
   return { success: true };
 });

@@ -1,5 +1,5 @@
 import { protectedProcedure } from "../../../create-context";
-import { database, generateId } from "@/backend/database";
+import { db, exercises, generateId } from "@/backend/database";
 import { z } from "zod";
 
 const addExerciseInput = z.object({
@@ -38,6 +38,6 @@ export default protectedProcedure.input(addExerciseInput).mutation(({ input }) =
     id: generateId(),
     date: new Date().toISOString(),
   };
-  database.exercises.push(newExercise);
+  db.insert(exercises).values(newExercise).run();
   return newExercise;
 });

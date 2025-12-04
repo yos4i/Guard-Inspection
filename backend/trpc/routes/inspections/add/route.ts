@@ -1,5 +1,5 @@
 import { protectedProcedure } from "../../../create-context";
-import { database, generateId } from "@/backend/database";
+import { db, inspections, generateId } from "@/backend/database";
 import { z } from "zod";
 
 const ratingValueSchema = z.enum(['needs_improvement', 'good', 'excellent']);
@@ -29,10 +29,27 @@ const addInspectionInput = z.object({
 
 export default protectedProcedure.input(addInspectionInput).mutation(({ input }) => {
   const newInspection = {
-    ...input,
     id: generateId(),
     date: new Date().toISOString(),
+    guardId: input.guardId,
+    inspectorName: input.inspectorName,
+    uniformComplete: input.uniformComplete,
+    guardBadgeValid: input.guardBadgeValid,
+    personalWeapon: input.personalWeapon,
+    fullMagazine: input.fullMagazine,
+    validCommunication: input.validCommunication,
+    entranceGateOperational: input.entranceGateOperational,
+    scanLogComplete: input.scanLogComplete,
+    proceduresBooklet: input.proceduresBooklet,
+    selectedProcedures: JSON.stringify(input.selectedProcedures),
+    entranceProcedures: input.entranceProcedures,
+    securityOfficerKnowledge: input.securityOfficerKnowledge,
+    inspectorNotes: input.inspectorNotes,
+    guardSignature: input.guardSignature,
   };
-  database.inspections.push(newInspection);
-  return newInspection;
+  db.insert(inspections).values(newInspection).run();
+  return {
+    ...newInspection,
+    selectedProcedures: input.selectedProcedures,
+  };
 });

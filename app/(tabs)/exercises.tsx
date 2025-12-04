@@ -13,7 +13,7 @@ import { Dumbbell, UserCircle, Trash2 } from 'lucide-react-native';
 import { useGuards, useSortedGuardsByExercise } from '@/contexts/GuardsProvider';
 
 export default function ExercisesScreen() {
-  const { isLoading, getLastExerciseDate, getGuardExercises, deleteGuard } = useGuards();
+  const { isLoading, getLastExerciseDate, deleteGuard } = useGuards();
   const guards = useSortedGuardsByExercise();
   const router = useRouter();
 
@@ -86,7 +86,6 @@ export default function ExercisesScreen() {
             };
 
             const timerColor = getTimerColor(daysRemaining);
-            const guardExercises = getGuardExercises(item.id);
 
             return (
               <View style={styles.card}>
@@ -130,16 +129,14 @@ export default function ExercisesScreen() {
                   </TouchableOpacity>
                 </View>
 
-                {guardExercises.length > 0 && (
-                  <TouchableOpacity
-                    style={styles.historyButton}
-                    onPress={() => {
-                      router.push(`/exercise-history?guardId=${item.id}` as any);
-                    }}
-                  >
-                    <Text style={styles.historyButtonText}>היסטוריית תרגילים</Text>
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity
+                  style={styles.historyButton}
+                  onPress={() => {
+                    router.push(`/exercise-history?guardId=${item.id}` as any);
+                  }}
+                >
+                  <Text style={styles.historyButtonText}>היסטוריית תרגילים</Text>
+                </TouchableOpacity>
               </View>
             );
           }}

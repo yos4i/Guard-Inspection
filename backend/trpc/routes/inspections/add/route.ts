@@ -1,5 +1,6 @@
 import { protectedProcedure } from "../../../create-context";
-import { db, inspections, generateId } from "@/backend/database";
+import { firestore, generateId } from "@/backend/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { z } from "zod";
 
 const ratingValueSchema = z.enum(['needs_improvement', 'good', 'excellent']);
@@ -27,7 +28,7 @@ const addInspectionInput = z.object({
   guardSignature: z.string(),
 });
 
-export default protectedProcedure.input(addInspectionInput).mutation(({ input }) => {
+export default protectedProcedure.input(addInspectionInput).mutation(async ({ input }) => {
   const newInspection = {
     id: generateId(),
     date: new Date().toISOString(),
@@ -41,15 +42,13 @@ export default protectedProcedure.input(addInspectionInput).mutation(({ input })
     entranceGateOperational: input.entranceGateOperational,
     scanLogComplete: input.scanLogComplete,
     proceduresBooklet: input.proceduresBooklet,
-    selectedProcedures: JSON.stringify(input.selectedProcedures),
+    selectedProcedures: input.selectedProcedures,
     entranceProcedures: input.entranceProcedures,
     securityOfficerKnowledge: input.securityOfficerKnowledge,
     inspectorNotes: input.inspectorNotes,
     guardSignature: input.guardSignature,
   };
-  db.insert(inspections).values(newInspection).run();
-  return {
-    ...newInspection,
-    selectedProcedures: input.selectedProcedures,
-  };
+  const inspectionDocRef = doc(firestore, 'inspections', newInspection.id);
+  await setDoc(inspectionDocRef, newInspection);
+  return newInspection;
 });

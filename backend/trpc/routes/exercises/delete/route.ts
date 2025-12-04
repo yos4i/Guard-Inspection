@@ -1,13 +1,14 @@
 import { protectedProcedure } from "../../../create-context";
-import { db, exercises } from "@/backend/database";
+import { firestore } from "@/backend/firestore";
+import { doc, deleteDoc } from "firebase/firestore";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
 
 const deleteExerciseInput = z.object({
   exerciseId: z.string(),
 });
 
-export default protectedProcedure.input(deleteExerciseInput).mutation(({ input }) => {
-  db.delete(exercises).where(eq(exercises.id, input.exerciseId)).run();
+export default protectedProcedure.input(deleteExerciseInput).mutation(async ({ input }) => {
+  const exerciseDocRef = doc(firestore, 'exercises', input.exerciseId);
+  await deleteDoc(exerciseDocRef);
   return { success: true };
 });

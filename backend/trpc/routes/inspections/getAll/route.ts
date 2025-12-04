@@ -1,26 +1,30 @@
 import { protectedProcedure } from "../../../create-context";
-import { db, inspections } from "@/backend/database";
+import { inspectionsCollection } from "@/backend/firestore";
+import { getDocs } from "firebase/firestore";
 import { Inspection, RatingValue } from "@/constants/types";
 
-export default protectedProcedure.query(() => {
-  const rows = db.select().from(inspections).all();
-  return rows.map((row): Inspection => ({
-    id: row.id,
-    guardId: row.guardId,
-    date: row.date,
-    inspectorName: row.inspectorName,
-    uniformComplete: row.uniformComplete as RatingValue,
-    guardBadgeValid: row.guardBadgeValid as RatingValue,
-    personalWeapon: row.personalWeapon as RatingValue,
-    fullMagazine: row.fullMagazine as RatingValue,
-    validCommunication: row.validCommunication as RatingValue,
-    entranceGateOperational: row.entranceGateOperational as RatingValue,
-    scanLogComplete: row.scanLogComplete as RatingValue,
-    proceduresBooklet: row.proceduresBooklet as RatingValue,
-    selectedProcedures: JSON.parse(row.selectedProcedures),
-    entranceProcedures: row.entranceProcedures as RatingValue,
-    securityOfficerKnowledge: row.securityOfficerKnowledge as RatingValue,
-    inspectorNotes: row.inspectorNotes,
-    guardSignature: row.guardSignature,
-  }));
+export default protectedProcedure.query(async () => {
+  const snapshot = await getDocs(inspectionsCollection);
+  return snapshot.docs.map((doc): Inspection => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      guardId: data.guardId,
+      date: data.date,
+      inspectorName: data.inspectorName,
+      uniformComplete: data.uniformComplete as RatingValue,
+      guardBadgeValid: data.guardBadgeValid as RatingValue,
+      personalWeapon: data.personalWeapon as RatingValue,
+      fullMagazine: data.fullMagazine as RatingValue,
+      validCommunication: data.validCommunication as RatingValue,
+      entranceGateOperational: data.entranceGateOperational as RatingValue,
+      scanLogComplete: data.scanLogComplete as RatingValue,
+      proceduresBooklet: data.proceduresBooklet as RatingValue,
+      selectedProcedures: data.selectedProcedures,
+      entranceProcedures: data.entranceProcedures as RatingValue,
+      securityOfficerKnowledge: data.securityOfficerKnowledge as RatingValue,
+      inspectorNotes: data.inspectorNotes,
+      guardSignature: data.guardSignature,
+    };
+  });
 });

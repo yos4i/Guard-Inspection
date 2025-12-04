@@ -1,13 +1,14 @@
 import { protectedProcedure } from "../../../create-context";
-import { db, inspections } from "@/backend/database";
+import { firestore } from "@/backend/firestore";
+import { doc, deleteDoc } from "firebase/firestore";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
 
 const deleteInspectionInput = z.object({
   inspectionId: z.string(),
 });
 
-export default protectedProcedure.input(deleteInspectionInput).mutation(({ input }) => {
-  db.delete(inspections).where(eq(inspections.id, input.inspectionId)).run();
+export default protectedProcedure.input(deleteInspectionInput).mutation(async ({ input }) => {
+  const inspectionDocRef = doc(firestore, 'inspections', input.inspectionId);
+  await deleteDoc(inspectionDocRef);
   return { success: true };
 });

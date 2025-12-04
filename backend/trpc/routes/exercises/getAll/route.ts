@@ -1,6 +1,8 @@
 import { protectedProcedure } from "../../../create-context";
-import { db, exercises } from "@/backend/database";
+import { exercisesCollection } from "@/backend/firestore";
+import { getDocs } from "firebase/firestore";
 
-export default protectedProcedure.query(() => {
-  return db.select().from(exercises).all();
+export default protectedProcedure.query(async () => {
+  const snapshot = await getDocs(exercisesCollection);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 });

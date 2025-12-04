@@ -1,6 +1,8 @@
 import { protectedProcedure } from "../../../create-context";
-import { db, guards } from "@/backend/database";
+import { guardsCollection } from "@/backend/firestore";
+import { getDocs } from "firebase/firestore";
 
-export default protectedProcedure.query(() => {
-  return db.select().from(guards).all();
+export default protectedProcedure.query(async () => {
+  const snapshot = await getDocs(guardsCollection);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 });

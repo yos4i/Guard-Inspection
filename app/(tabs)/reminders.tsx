@@ -143,15 +143,7 @@ export default function RemindersScreen() {
 
     return (
       <View style={styles.section}>
-        <View style={styles.sectionHeaderWithButton}>
-          <TouchableOpacity
-            onPress={() => router.push('/add-guard')}
-            style={styles.addButtonCircle}
-          >
-            <Plus size={24} color="#FFFFFF" strokeWidth={2.5} />
-          </TouchableOpacity>
-          <Text style={styles.sectionTitle}>כל התרגילים</Text>
-        </View>
+        <Text style={styles.sectionTitle}>כל התרגילים</Text>
         <FlatList
           data={sortedGuardsByExercise}
           scrollEnabled={false}
@@ -247,36 +239,44 @@ export default function RemindersScreen() {
         }}
       />
 
-      <View style={styles.categoryTabs}>
-        {categories.map((category) => {
-          const isSelected = selectedCategory === category.id;
-          const Icon = category.icon;
+      <View style={styles.headerSection}>
+        <View style={styles.categoryTabs}>
+          {categories.map((category) => {
+            const isSelected = selectedCategory === category.id;
+            const Icon = category.icon;
 
-          return (
-            <TouchableOpacity
-              key={category.id}
-              style={[
-                styles.categoryTab,
-                isSelected && { backgroundColor: category.color },
-              ]}
-              onPress={() => setSelectedCategory(category.id)}
-            >
-              <Icon
-                size={20}
-                color={isSelected ? '#FFFFFF' : '#6B7280'}
-                strokeWidth={2}
-              />
-              <Text
+            return (
+              <TouchableOpacity
+                key={category.id}
                 style={[
-                  styles.categoryTabText,
-                  isSelected && styles.categoryTabTextActive,
+                  styles.categoryTab,
+                  isSelected && { backgroundColor: category.color },
                 ]}
+                onPress={() => setSelectedCategory(category.id)}
               >
-                {category.title}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+                <Icon
+                  size={20}
+                  color={isSelected ? '#FFFFFF' : '#6B7280'}
+                  strokeWidth={2}
+                />
+                <Text
+                  style={[
+                    styles.categoryTabText,
+                    isSelected && styles.categoryTabTextActive,
+                  ]}
+                >
+                  {category.title}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        <TouchableOpacity
+          onPress={() => router.push('/add-guard')}
+          style={styles.addButtonCircle}
+        >
+          <Plus size={24} color="#FFFFFF" strokeWidth={2.5} />
+        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -291,14 +291,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9FAFB',
   },
-  categoryTabs: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 8,
+  headerSection: {
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  categoryTabs: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: 8,
   },
   categoryTab: {
     flex: 1,
@@ -461,12 +467,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600' as const,
     marginTop: 2,
-  },
-  sectionHeaderWithButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 12,
   },
   addButtonCircle: {
     width: 44,

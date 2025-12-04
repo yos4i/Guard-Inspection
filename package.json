@@ -7,6 +7,8 @@
     "backend": "tsx server.ts",
     "frontend": "expo start --web",
     "expo": "expo start",
+    "build": "npx expo export --platform web",
+    "deploy": "npm run build && npx firebase-tools deploy --only hosting",
     "lint": "expo lint"
   },
   "dependencies": {

@@ -24,7 +24,7 @@ export default function GuardsScreen() {
 
   const getStatusText = (days: number) => {
     if (days < 0) return `איחור ${Math.abs(days)} ימים`;
-    if (days === 0) return 'היום';
+    if (days === 0) return '0 ימים';
     return `עוד ${days} ימים`;
   };
 

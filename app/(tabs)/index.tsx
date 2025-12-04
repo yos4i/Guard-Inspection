@@ -65,8 +65,13 @@ export default function GuardsScreen() {
         style={styles.addGuardCard}
         onPress={() => router.push('/add-guard')}
       >
-        <Plus size={28} color="#2563EB" strokeWidth={2.5} />
-        <Text style={styles.addGuardText}>הוסף מאבטח\ת</Text>
+        <View style={styles.addIconCircle}>
+          <Plus size={24} color="#FFFFFF" strokeWidth={2.5} />
+        </View>
+        <View style={styles.addTextContainer}>
+          <Text style={styles.addGuardTitle}>הוסף מאבטח\ת</Text>
+          <Text style={styles.addGuardSubtitle}>הוסף ביקורת חדשה למערכת</Text>
+        </View>
       </TouchableOpacity>
 
       {guards.length === 0 ? (
@@ -161,28 +166,44 @@ const styles = StyleSheet.create({
   addGuardCard: {
     flexDirection: 'row' as const,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     marginHorizontal: 16,
     marginTop: 16,
     marginBottom: 8,
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#2563EB',
-    borderStyle: 'dashed' as const,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-    gap: 12,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
-  addGuardText: {
-    fontSize: 18,
-    fontWeight: '600' as const,
-    color: '#2563EB',
+  addIconCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#2563EB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 16,
+  },
+  addTextContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  addGuardTitle: {
+    fontSize: 20,
+    fontWeight: '700' as const,
+    color: '#1F2937',
+    marginBottom: 4,
+  },
+  addGuardSubtitle: {
+    fontSize: 14,
+    color: '#6B7280',
+    fontWeight: '400' as const,
   },
   emptyContainer: {
     flex: 1,

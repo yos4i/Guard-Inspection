@@ -58,27 +58,22 @@ export default function GuardsScreen() {
         options={{
           title: 'ביקורות',
           headerTitleAlign: 'center',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.push('/add-guard')}
+              style={styles.addButton}
+            >
+              <Plus size={24} color="#2563EB" />
+            </TouchableOpacity>
+          ),
         }}
       />
-
-      <TouchableOpacity
-        style={styles.addGuardCard}
-        onPress={() => router.push('/add-guard')}
-      >
-        <View style={styles.addIconCircle}>
-          <Plus size={24} color="#FFFFFF" strokeWidth={2.5} />
-        </View>
-        <View style={styles.addTextContainer}>
-          <Text style={styles.addGuardTitle}>הוסף מאבטח\ת</Text>
-          <Text style={styles.addGuardSubtitle}>הוסף ביקורת חדשה למערכת</Text>
-        </View>
-      </TouchableOpacity>
 
       {guards.length === 0 ? (
         <View style={styles.emptyContainer}>
           <UserCircle size={80} color="#D1D5DB" strokeWidth={1.5} />
           <Text style={styles.emptyTitle}>אין ביקורות במערכת</Text>
-          <Text style={styles.emptyText}>לחץ על הכפתור למעלה כדי להוסיף</Text>
+          <Text style={styles.emptyText}>הוסף ביקורות ראשונה על ידי לחיצה על כפתור +</Text>
         </View>
       ) : (
         <FlatList
@@ -163,47 +158,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F9FAFB',
   },
-  addGuardCard: {
-    flexDirection: 'row' as const,
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 16,
-    marginTop: 16,
-    marginBottom: 8,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 4,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  addIconCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#2563EB',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 16,
-  },
-  addTextContainer: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  addGuardTitle: {
-    fontSize: 20,
-    fontWeight: '700' as const,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  addGuardSubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-    fontWeight: '400' as const,
+  addButton: {
+    padding: 4,
   },
   emptyContainer: {
     flex: 1,

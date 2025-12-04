@@ -86,7 +86,7 @@ export default function AddGuardScreen() {
     >
       <Stack.Screen
         options={{
-          title: 'הוסף ביקורות',
+          title: 'הוסף מאבטח\\ת',
           headerBackTitle: 'ביטול',
         }}
       />
@@ -99,7 +99,7 @@ export default function AddGuardScreen() {
           <UserPlus size={60} color="#2563EB" strokeWidth={1.5} />
         </View>
 
-        <Text style={styles.title}>פרטי ביקורות חדשה</Text>
+        <Text style={styles.title}>פרטי מאבטח\\ת חדש\\ה</Text>
         <Text style={styles.subtitle}>
           ביקורות: {guards.length}
         </Text>
@@ -161,7 +161,7 @@ export default function AddGuardScreen() {
             disabled={isSubmitting}
           >
             <Text style={styles.submitButtonText}>
-              {isSubmitting ? 'שומר...' : 'הוסף ביקורות'}
+              {isSubmitting ? 'שומר...' : 'הוסף מאבטח\\ת'}
             </Text>
           </TouchableOpacity>
         </View>

@@ -108,13 +108,14 @@ export default function RemindersScreen() {
                 )
               : 0;
 
-            const getTimerColor = (days: number) => {
+            const getTimerColor = (days: number, hasInspection: boolean) => {
+              if (!hasInspection) return '#DC2626';
               if (days >= 15 && days <= 30) return '#10B981';
               if (days >= 5 && days < 15) return '#F59E0B';
               return '#DC2626';
             };
 
-            const timerColor = getTimerColor(daysRemaining);
+            const timerColor = getTimerColor(daysRemaining, !!item.lastInspection);
 
             return (
               <View style={styles.card}>

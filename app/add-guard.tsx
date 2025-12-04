@@ -99,7 +99,7 @@ export default function AddGuardScreen() {
           <UserPlus size={60} color="#2563EB" strokeWidth={1.5} />
         </View>
 
-        <Text style={styles.title}>פרטי מאבטח\\ת</Text>
+        <Text style={styles.title}>פרטי המאבטח\ת</Text>
         <Text style={styles.subtitle}>
           מאבטחים: {guards.length}
         </Text>

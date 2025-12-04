@@ -12,6 +12,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors.light.tint,
         headerShown: true,
       }}
+      initialRouteName="reminders"
     >
       <Tabs.Screen
         name="reminders"

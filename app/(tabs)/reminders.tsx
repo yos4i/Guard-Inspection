@@ -236,6 +236,27 @@ export default function RemindersScreen() {
               <LogOut size={22} color="#ef4444" />
             </TouchableOpacity>
           ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => router.push('/add-guard')}
+              style={{
+                marginRight: 16,
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+                backgroundColor: '#2563EB',
+                alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+              }}
+            >
+              <Plus size={24} color="#FFFFFF" strokeWidth={2.5} />
+            </TouchableOpacity>
+          ),
         }}
       />
 
@@ -271,12 +292,6 @@ export default function RemindersScreen() {
             );
           })}
         </View>
-        <TouchableOpacity
-          onPress={() => router.push('/add-guard')}
-          style={styles.addButtonCircle}
-        >
-          <Plus size={24} color="#FFFFFF" strokeWidth={2.5} />
-        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -297,12 +312,8 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E5E7EB',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
   },
   categoryTabs: {
-    flex: 1,
     flexDirection: 'row',
     gap: 8,
   },

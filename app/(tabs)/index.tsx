@@ -17,6 +17,7 @@ export default function GuardsScreen() {
   const guards = useSortedGuards();
 
   const getStatusColor = (days: number) => {
+    if (days === 0) return '#DC2626';
     if (days < 0) return '#DC2626';
     if (days <= 7) return '#F59E0B';
     return '#10B981';

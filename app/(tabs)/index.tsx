@@ -58,22 +58,22 @@ export default function GuardsScreen() {
         options={{
           title: 'ביקורות',
           headerTitleAlign: 'center',
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.push('/add-guard')}
-              style={styles.addButton}
-            >
-              <Plus size={24} color="#2563EB" />
-            </TouchableOpacity>
-          ),
         }}
       />
+
+      <TouchableOpacity
+        style={styles.addGuardCard}
+        onPress={() => router.push('/add-guard')}
+      >
+        <Plus size={28} color="#2563EB" strokeWidth={2.5} />
+        <Text style={styles.addGuardText}>הוסף מאבטח\ת</Text>
+      </TouchableOpacity>
 
       {guards.length === 0 ? (
         <View style={styles.emptyContainer}>
           <UserCircle size={80} color="#D1D5DB" strokeWidth={1.5} />
           <Text style={styles.emptyTitle}>אין ביקורות במערכת</Text>
-          <Text style={styles.emptyText}>הוסף ביקורות ראשונה על ידי לחיצה על כפתור +</Text>
+          <Text style={styles.emptyText}>לחץ על הכפתור למעלה כדי להוסיף</Text>
         </View>
       ) : (
         <FlatList
@@ -158,8 +158,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F9FAFB',
   },
-  addButton: {
-    padding: 4,
+  addGuardCard: {
+    flexDirection: 'row' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#2563EB',
+    borderStyle: 'dashed' as const,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+    gap: 12,
+  },
+  addGuardText: {
+    fontSize: 18,
+    fontWeight: '600' as const,
+    color: '#2563EB',
   },
   emptyContainer: {
     flex: 1,

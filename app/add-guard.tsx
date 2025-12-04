@@ -65,7 +65,7 @@ export default function AddGuardScreen() {
         phone: phone.trim(),
       });
 
-      Alert.alert('הצלחה', 'הביקורות נוספה בהצלחה', [
+      Alert.alert('הצלחה', 'מאבטח נוסף בהצלחה', [
         {
           text: 'אישור',
           onPress: () => router.back(),

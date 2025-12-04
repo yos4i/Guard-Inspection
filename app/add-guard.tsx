@@ -86,7 +86,7 @@ export default function AddGuardScreen() {
     >
       <Stack.Screen
         options={{
-          title: 'הוסף מאבטח\\ת',
+          title: 'הוסף מאבטח',
           headerBackTitle: 'ביטול',
         }}
       />
@@ -161,7 +161,7 @@ export default function AddGuardScreen() {
             disabled={isSubmitting}
           >
             <Text style={styles.submitButtonText}>
-              {isSubmitting ? 'שומר...' : 'הוסף מאבטח\\ת'}
+              {isSubmitting ? 'שומר...' : 'הוסף מאבטח'}
             </Text>
           </TouchableOpacity>
         </View>

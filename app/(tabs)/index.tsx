@@ -73,7 +73,7 @@ export default function GuardsScreen() {
         <View style={styles.emptyContainer}>
           <UserCircle size={80} color="#D1D5DB" strokeWidth={1.5} />
           <Text style={styles.emptyTitle}>אין ביקורות במערכת</Text>
-          <Text style={styles.emptyText}>הוסף מאבטח\ת ראשון\ה על ידי לחיצה על כפתור +</Text>
+          <Text style={styles.emptyText}>הוסף מאבטח ראשון על ידי לחיצה על כפתור +</Text>
         </View>
       ) : (
         <FlatList

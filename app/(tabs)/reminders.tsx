@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useGuardReminders, useSortedGuardsByExercise, useGuards } from '@/contexts/GuardsProvider';
-import { Shield, Dumbbell, Timer, LogOut, Plus } from 'lucide-react-native';
+import { Shield, Dumbbell, Timer, LogOut, Plus, Minus } from 'lucide-react-native';
 import { useAuth } from '@/contexts/AuthProvider';
 
 type CategoryType = 'guards' | 'exercises';
@@ -30,8 +30,9 @@ const categories: CategoryTab[] = [
 export default function RemindersScreen() {
   const reminders = useGuardReminders();
   const sortedGuardsByExercise = useSortedGuardsByExercise();
-  const { getLastExerciseDate } = useGuards();
+  const { getLastExerciseDate, guards, deleteGuard } = useGuards();
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('guards');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { logout } = useAuth();
   const router = useRouter();
 
@@ -50,6 +51,27 @@ export default function RemindersScreen() {
           onPress: async () => {
             await logout();
             router.replace('/login');
+          },
+        },
+      ]
+    );
+  };
+
+  const handleDeleteGuard = (guardId: string, guardName: string) => {
+    Alert.alert(
+      'מחיקת מאבטח',
+      `האם אתה בטוח שברצונך למחוק את ${guardName}?\nכל הביקורות והתרגילים שלו יימחקו גם כן.`,
+      [
+        {
+          text: 'ביטול',
+          style: 'cancel',
+        },
+        {
+          text: 'מחק',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteGuard(guardId);
+            console.log('Guard deleted:', guardId);
           },
         },
       ]
@@ -237,25 +259,44 @@ export default function RemindersScreen() {
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity
-              onPress={() => router.push('/add-guard')}
-              style={{
-                marginRight: 16,
-                width: 40,
-                height: 40,
-                borderRadius: 20,
-                backgroundColor: '#2563EB',
-                alignItems: 'center',
-                justifyContent: 'center',
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 4,
-                elevation: 3,
-              }}
-            >
-              <Plus size={24} color="#FFFFFF" strokeWidth={2.5} />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', gap: 8, marginRight: 16 }}>
+              <TouchableOpacity
+                onPress={() => setShowDeleteModal(true)}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  backgroundColor: '#DC2626',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 3,
+                }}
+              >
+                <Minus size={24} color="#FFFFFF" strokeWidth={2.5} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => router.push('/add-guard')}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  backgroundColor: '#2563EB',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 3,
+                }}
+              >
+                <Plus size={24} color="#FFFFFF" strokeWidth={2.5} />
+              </TouchableOpacity>
+            </View>
           ),
         }}
       />
@@ -297,6 +338,51 @@ export default function RemindersScreen() {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {renderCategoryContent()}
       </ScrollView>
+
+      {showDeleteModal && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>מחיקת מאבטח</Text>
+            </View>
+            
+            {guards.length === 0 ? (
+              <View style={styles.emptyModalContainer}>
+                <Shield size={48} color="#D1D5DB" strokeWidth={1.5} />
+                <Text style={styles.emptyModalText}>אין מאבטחים במערכת</Text>
+              </View>
+            ) : (
+              <ScrollView style={styles.modalScrollView}>
+                {guards.map((guard) => (
+                  <TouchableOpacity
+                    key={guard.id}
+                    style={styles.guardItem}
+                    onPress={() => {
+                      setShowDeleteModal(false);
+                      handleDeleteGuard(guard.id, `${guard.firstName} ${guard.lastName}`);
+                    }}
+                  >
+                    <View style={styles.guardItemContent}>
+                      <Text style={styles.guardItemName}>
+                        {guard.firstName} {guard.lastName}
+                      </Text>
+                      <Text style={styles.guardItemId}>ת.ז: {guard.idNumber}</Text>
+                    </View>
+                    <Minus size={20} color="#DC2626" strokeWidth={2} />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            )}
+            
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setShowDeleteModal(false)}
+            >
+              <Text style={styles.modalCloseButtonText}>סגור</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -491,5 +577,83 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    width: '100%',
+    maxHeight: '80%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+  modalHeader: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '700' as const,
+    color: '#1F2937',
+    textAlign: 'center',
+  },
+  modalScrollView: {
+    maxHeight: 400,
+  },
+  emptyModalContainer: {
+    padding: 40,
+    alignItems: 'center',
+  },
+  emptyModalText: {
+    fontSize: 16,
+    color: '#6B7280',
+    marginTop: 12,
+  },
+  guardItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  guardItemContent: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  guardItemName: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: '#1F2937',
+    marginBottom: 4,
+  },
+  guardItemId: {
+    fontSize: 14,
+    color: '#6B7280',
+  },
+  modalCloseButton: {
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+    alignItems: 'center',
+  },
+  modalCloseButtonText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: '#2563EB',
   },
 });

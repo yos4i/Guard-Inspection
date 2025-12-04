@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   newExerciseButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2563EB',
+    backgroundColor: '#DC2626',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,

@@ -114,7 +114,7 @@ export const [GuardsProvider, useGuards] = createContextHook(() => {
 
   const getDaysUntilNextInspection = (guardId: string) => {
     const lastInspection = getLastInspectionDate(guardId);
-    if (!lastInspection) return -9999;
+    if (!lastInspection) return 0;
 
     const lastDate = new Date(lastInspection);
     const nextDate = new Date(lastDate);
@@ -161,7 +161,7 @@ export const [GuardsProvider, useGuards] = createContextHook(() => {
 
   const getDaysUntilNextExercise = (guardId: string) => {
     const lastExercise = getLastExerciseDate(guardId);
-    if (!lastExercise) return -9999;
+    if (!lastExercise) return 0;
 
     const lastDate = new Date(lastExercise);
     const nextDate = new Date(lastDate);

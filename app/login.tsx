@@ -29,13 +29,16 @@ export default function LoginScreen() {
     }
 
     setIsLoading(true);
-    const success = await login(username, password);
-    setIsLoading(false);
-
-    if (success) {
+    try {
+      await login(username, password);
       router.replace('/(tabs)');
-    } else {
-      Alert.alert('שגיאה', 'שם משתמש או סיסמה שגויים');
+    } catch (error: any) {
+      console.error('Login error in UI:', error);
+      const errorMessage = error?.message || 'שם משתמש או סיסמה שגויים';
+      const detailedError = `${errorMessage}\n\nAPI URL: ${process.env.EXPO_PUBLIC_RORK_API_BASE_URL || 'לא מוגדר'}`;
+      Alert.alert('שגיאת התחברות', detailedError);
+    } finally {
+      setIsLoading(false);
     }
   };
 

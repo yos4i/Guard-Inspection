@@ -3,9 +3,10 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "bunx rork start -p 48c3x1kwxfd7xexeo4g6i --tunnel",
-    "start-web": "bunx rork start -p 48c3x1kwxfd7xexeo4g6i --web --tunnel",
-    "start-web-dev": "DEBUG=expo* bunx rork start -p 48c3x1kwxfd7xexeo4g6i --web --tunnel",
+    "start": "npm run backend & npm run frontend",
+    "backend": "tsx server.ts",
+    "frontend": "expo start --web",
+    "expo": "expo start",
     "lint": "expo lint"
   },
   "dependencies": {

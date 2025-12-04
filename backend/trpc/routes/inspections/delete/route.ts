@@ -1,6 +1,5 @@
 import { protectedProcedure } from "../../../create-context";
-import { firestore } from "@/backend/firestore";
-import { doc, deleteDoc } from "firebase/firestore";
+import { inspectionsCollection } from "@/backend/firestore-admin";
 import { z } from "zod";
 
 const deleteInspectionInput = z.object({
@@ -8,7 +7,6 @@ const deleteInspectionInput = z.object({
 });
 
 export default protectedProcedure.input(deleteInspectionInput).mutation(async ({ input }) => {
-  const inspectionDocRef = doc(firestore, 'inspections', input.inspectionId);
-  await deleteDoc(inspectionDocRef);
+  await inspectionsCollection.doc(input.inspectionId).delete();
   return { success: true };
 });

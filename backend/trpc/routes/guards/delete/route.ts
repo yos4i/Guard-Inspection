@@ -1,6 +1,5 @@
 import { protectedProcedure } from "../../../create-context";
-import { firestore, inspectionsCollection, exercisesCollection } from "@/backend/firestore";
-import { doc, deleteDoc, query, where, getDocs } from "firebase/firestore";
+import { guardsCollection, inspectionsCollection, exercisesCollection } from "@/backend/firestore-admin";
 import { z } from "zod";
 
 const deleteGuardInput = z.object({
@@ -9,18 +8,15 @@ const deleteGuardInput = z.object({
 
 export default protectedProcedure.input(deleteGuardInput).mutation(async ({ input }) => {
   // Delete the guard
-  const guardDocRef = doc(firestore, 'guards', input.guardId);
-  await deleteDoc(guardDocRef);
+  await guardsCollection.doc(input.guardId).delete();
 
   // Delete all inspections for this guard
-  const inspectionsQuery = query(inspectionsCollection, where('guardId', '==', input.guardId));
-  const inspectionsSnapshot = await getDocs(inspectionsQuery);
-  const inspectionDeletes = inspectionsSnapshot.docs.map(docSnapshot => deleteDoc(docSnapshot.ref));
+  const inspectionsSnapshot = await inspectionsCollection.where('guardId', '==', input.guardId).get();
+  const inspectionDeletes = inspectionsSnapshot.docs.map(doc => doc.ref.delete());
 
   // Delete all exercises for this guard
-  const exercisesQuery = query(exercisesCollection, where('guardId', '==', input.guardId));
-  const exercisesSnapshot = await getDocs(exercisesQuery);
-  const exerciseDeletes = exercisesSnapshot.docs.map(docSnapshot => deleteDoc(docSnapshot.ref));
+  const exercisesSnapshot = await exercisesCollection.where('guardId', '==', input.guardId).get();
+  const exerciseDeletes = exercisesSnapshot.docs.map(doc => doc.ref.delete());
 
   await Promise.all([...inspectionDeletes, ...exerciseDeletes]);
 

@@ -1,6 +1,5 @@
 import { publicProcedure } from "../../../create-context";
-import { firestore, initializeDefaultUser } from "@/backend/firestore";
-import { doc, getDoc } from "firebase/firestore";
+import { usersCollection, initializeDefaultUser } from "@/backend/firestore-admin";
 import { z } from "zod";
 
 const loginInput = z.object({
@@ -8,22 +7,40 @@ const loginInput = z.object({
   password: z.string(),
 });
 
-// Flag to track if we've already tried to initialize
-let initAttempted = false;
+// Initialize on first load
+let initialized = false;
 
 export default publicProcedure.input(loginInput).mutation(async ({ input }) => {
-  // Initialize default user on first login attempt
-  if (!initAttempted) {
-    initAttempted = true;
+  console.log('[Login] Attempting login for:', input.username);
+
+  // Ensure default user exists
+  if (!initialized) {
+    initialized = true;
     await initializeDefaultUser();
   }
 
-  const userDocRef = doc(firestore, 'users', input.username);
-  const userDoc = await getDoc(userDocRef);
-  const user = userDoc.data();
+  try {
+    const userDocRef = usersCollection.doc(input.username);
+    const userDoc = await userDocRef.get();
 
-  if (user && user.password === input.password) {
-    return { success: true, token: user.token };
+    console.log('[Login] User found:', userDoc.exists);
+
+    if (userDoc.exists) {
+      const user = userDoc.data();
+
+      if (user && user.password === input.password) {
+        console.log('[Login] Login successful for:', input.username);
+        return { success: true, token: user.token };
+      }
+    }
+
+    console.log('[Login] Login failed - wrong credentials');
+    throw new Error('שם משתמש או סיסמה שגויים');
+  } catch (error: any) {
+    console.error('[Login] Error during login:', error);
+    if (error.message === 'שם משתמש או סיסמה שגויים') {
+      throw error;
+    }
+    throw new Error('שגיאה בהתחברות למערכת');
   }
-  throw new Error('שם משתמש או סיסמה שגויים');
 });

@@ -1,6 +1,5 @@
 import { protectedProcedure } from "../../../create-context";
-import { firestore } from "@/backend/firestore";
-import { doc, deleteDoc } from "firebase/firestore";
+import { exercisesCollection } from "@/backend/firestore-admin";
 import { z } from "zod";
 
 const deleteExerciseInput = z.object({
@@ -8,7 +7,6 @@ const deleteExerciseInput = z.object({
 });
 
 export default protectedProcedure.input(deleteExerciseInput).mutation(async ({ input }) => {
-  const exerciseDocRef = doc(firestore, 'exercises', input.exerciseId);
-  await deleteDoc(exerciseDocRef);
+  await exercisesCollection.doc(input.exerciseId).delete();
   return { success: true };
 });

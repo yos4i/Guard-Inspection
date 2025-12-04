@@ -47,7 +47,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     try {
       console.log('Attempting login...');
       console.log('API Base URL:', process.env.EXPO_PUBLIC_RORK_API_BASE_URL);
-      console.log('tRPC URL:', `${process.env.EXPO_PUBLIC_RORK_API_BASE_URL}/api/trpc`);
+      console.log('tRPC URL:', `${process.env.EXPO_PUBLIC_RORK_API_BASE_URL}/trpc`);
       const result = await loginMutation.mutateAsync({ username, password });
       console.log('Login successful, saving token...');
       await AsyncStorage.setItem(AUTH_KEY, result.token);

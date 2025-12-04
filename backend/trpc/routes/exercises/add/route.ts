@@ -1,6 +1,5 @@
 import { protectedProcedure } from "../../../create-context";
-import { firestore, generateId } from "@/backend/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { exercisesCollection, generateId } from "@/backend/firestore-admin";
 import { z } from "zod";
 
 const addExerciseInput = z.object({
@@ -39,7 +38,6 @@ export default protectedProcedure.input(addExerciseInput).mutation(async ({ inpu
     id: generateId(),
     date: new Date().toISOString(),
   };
-  const exerciseDocRef = doc(firestore, 'exercises', newExercise.id);
-  await setDoc(exerciseDocRef, newExercise);
+  await exercisesCollection.doc(newExercise.id).set(newExercise);
   return newExercise;
 });

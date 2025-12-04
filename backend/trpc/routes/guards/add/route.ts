@@ -1,6 +1,5 @@
 import { protectedProcedure } from "../../../create-context";
-import { firestore, generateId } from "@/backend/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { guardsCollection, generateId } from "@/backend/firestore-admin";
 import { z } from "zod";
 
 const addGuardInput = z.object({
@@ -16,7 +15,6 @@ export default protectedProcedure.input(addGuardInput).mutation(async ({ input }
     id: generateId(),
     createdAt: new Date().toISOString(),
   };
-  const guardDocRef = doc(firestore, 'guards', newGuard.id);
-  await setDoc(guardDocRef, newGuard);
+  await guardsCollection.doc(newGuard.id).set(newGuard);
   return newGuard;
 });

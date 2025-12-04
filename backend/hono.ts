@@ -6,6 +6,12 @@ import { createContext } from "./trpc/create-context";
 
 const app = new Hono();
 
+// Logging middleware
+app.use("*", async (c, next) => {
+  console.log(`[${new Date().toISOString()}] ${c.req.method} ${c.req.url}`);
+  await next();
+});
+
 app.use("*", cors());
 
 app.use(

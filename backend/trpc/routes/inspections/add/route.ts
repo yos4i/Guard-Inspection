@@ -1,6 +1,5 @@
 import { protectedProcedure } from "../../../create-context";
-import { firestore, generateId } from "@/backend/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { inspectionsCollection, generateId } from "@/backend/firestore-admin";
 import { z } from "zod";
 
 const ratingValueSchema = z.enum(['needs_improvement', 'good', 'excellent']);
@@ -48,7 +47,6 @@ export default protectedProcedure.input(addInspectionInput).mutation(async ({ in
     inspectorNotes: input.inspectorNotes,
     guardSignature: input.guardSignature,
   };
-  const inspectionDocRef = doc(firestore, 'inspections', newInspection.id);
-  await setDoc(inspectionDocRef, newInspection);
+  await inspectionsCollection.doc(newInspection.id).set(newInspection);
   return newInspection;
 });

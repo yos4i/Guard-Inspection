@@ -1,10 +1,9 @@
 import { protectedProcedure } from "../../../create-context";
-import { inspectionsCollection } from "@/backend/firestore";
-import { getDocs } from "firebase/firestore";
+import { inspectionsCollection } from "@/backend/firestore-admin";
 import { Inspection, RatingValue } from "@/constants/types";
 
 export default protectedProcedure.query(async () => {
-  const snapshot = await getDocs(inspectionsCollection);
+  const snapshot = await inspectionsCollection.get();
   return snapshot.docs.map((doc): Inspection => {
     const data = doc.data();
     return {

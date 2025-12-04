@@ -1,104 +1,117 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Guard, Inspection, Exercise } from '@/constants/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import createContextHook from '@nkzw/create-context-hook';
-
-const GUARDS_KEY = '@guards';
-const INSPECTIONS_KEY = '@inspections';
-const EXERCISES_KEY = '@exercises';
+import { trpc } from '@/lib/trpc';
 
 export const [GuardsProvider, useGuards] = createContextHook(() => {
-  const [guards, setGuards] = useState<Guard[]>([]);
-  const [inspections, setInspections] = useState<Inspection[]>([]);
-  const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const guardsQuery = trpc.guards.getAll.useQuery(undefined, {
+    refetchOnMount: true,
+  });
+  const inspectionsQuery = trpc.inspections.getAll.useQuery(undefined, {
+    refetchOnMount: true,
+  });
+  const exercisesQuery = trpc.exercises.getAll.useQuery(undefined, {
+    refetchOnMount: true,
+  });
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  const guards = guardsQuery.data || [];
+  const inspections = inspectionsQuery.data || [];
+  const exercises = exercisesQuery.data || [];
+  const isLoading = guardsQuery.isLoading || inspectionsQuery.isLoading || exercisesQuery.isLoading;
 
-  const loadData = async () => {
-    try {
-      const [guardsData, inspectionsData, exercisesData] = await Promise.all([
-        AsyncStorage.getItem(GUARDS_KEY),
-        AsyncStorage.getItem(INSPECTIONS_KEY),
-        AsyncStorage.getItem(EXERCISES_KEY),
-      ]);
+  const addGuardMutation = trpc.guards.add.useMutation({
+    onSuccess: () => {
+      guardsQuery.refetch();
+    },
+  });
 
-      if (guardsData) {
-        setGuards(JSON.parse(guardsData));
-      }
-      if (inspectionsData) {
-        setInspections(JSON.parse(inspectionsData));
-      }
-      if (exercisesData) {
-        setExercises(JSON.parse(exercisesData));
-      }
-    } catch (error) {
-      console.error('Failed to load data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const deleteGuardMutation = trpc.guards.delete.useMutation({
+    onSuccess: () => {
+      guardsQuery.refetch();
+      inspectionsQuery.refetch();
+      exercisesQuery.refetch();
+    },
+  });
 
-  const saveGuards = async (newGuards: Guard[]) => {
-    try {
-      await AsyncStorage.setItem(GUARDS_KEY, JSON.stringify(newGuards));
-      setGuards(newGuards);
-    } catch (error) {
-      console.error('Failed to save guards:', error);
-    }
-  };
+  const addInspectionMutation = trpc.inspections.add.useMutation({
+    onSuccess: () => {
+      inspectionsQuery.refetch();
+    },
+  });
 
-  const saveInspections = async (newInspections: Inspection[]) => {
-    try {
-      await AsyncStorage.setItem(INSPECTIONS_KEY, JSON.stringify(newInspections));
-      setInspections(newInspections);
-    } catch (error) {
-      console.error('Failed to save inspections:', error);
-    }
-  };
+  const deleteInspectionMutation = trpc.inspections.delete.useMutation({
+    onSuccess: () => {
+      inspectionsQuery.refetch();
+    },
+  });
 
-  const saveExercises = async (newExercises: Exercise[]) => {
-    try {
-      await AsyncStorage.setItem(EXERCISES_KEY, JSON.stringify(newExercises));
-      setExercises(newExercises);
-    } catch (error) {
-      console.error('Failed to save exercises:', error);
-    }
-  };
+  const addExerciseMutation = trpc.exercises.add.useMutation({
+    onSuccess: () => {
+      exercisesQuery.refetch();
+    },
+  });
+
+  const deleteExerciseMutation = trpc.exercises.delete.useMutation({
+    onSuccess: () => {
+      exercisesQuery.refetch();
+    },
+  });
 
   const addGuard = async (guard: Omit<Guard, 'id' | 'createdAt'>) => {
-    const newGuard: Guard = {
-      ...guard,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    const updatedGuards = [...guards, newGuard];
-    await saveGuards(updatedGuards);
-    return newGuard;
+    try {
+      const newGuard = await addGuardMutation.mutateAsync(guard);
+      return newGuard;
+    } catch (error) {
+      console.error('Failed to add guard:', error);
+      throw error;
+    }
   };
 
   const deleteGuard = async (guardId: string) => {
-    const updatedGuards = guards.filter(g => g.id !== guardId);
-    const updatedInspections = inspections.filter(i => i.guardId !== guardId);
-    const updatedExercises = exercises.filter(e => e.guardId !== guardId);
-    await Promise.all([
-      saveGuards(updatedGuards),
-      saveInspections(updatedInspections),
-      saveExercises(updatedExercises),
-    ]);
+    try {
+      await deleteGuardMutation.mutateAsync({ guardId });
+    } catch (error) {
+      console.error('Failed to delete guard:', error);
+      throw error;
+    }
   };
 
   const addInspection = async (inspection: Omit<Inspection, 'id' | 'date'>) => {
-    const newInspection: Inspection = {
-      ...inspection,
-      id: Date.now().toString(),
-      date: new Date().toISOString(),
-    };
-    const updatedInspections = [...inspections, newInspection];
-    await saveInspections(updatedInspections);
-    return newInspection;
+    try {
+      const newInspection = await addInspectionMutation.mutateAsync(inspection);
+      return newInspection;
+    } catch (error) {
+      console.error('Failed to add inspection:', error);
+      throw error;
+    }
+  };
+
+  const deleteInspection = async (inspectionId: string) => {
+    try {
+      await deleteInspectionMutation.mutateAsync({ inspectionId });
+    } catch (error) {
+      console.error('Failed to delete inspection:', error);
+      throw error;
+    }
+  };
+
+  const addExercise = async (exercise: Omit<Exercise, 'id' | 'date'>) => {
+    try {
+      const newExercise = await addExerciseMutation.mutateAsync(exercise);
+      return newExercise;
+    } catch (error) {
+      console.error('Failed to add exercise:', error);
+      throw error;
+    }
+  };
+
+  const deleteExercise = async (exerciseId: string) => {
+    try {
+      await deleteExerciseMutation.mutateAsync({ exerciseId });
+    } catch (error) {
+      console.error('Failed to delete exercise:', error);
+      throw error;
+    }
   };
 
   const getGuardInspections = (guardId: string) => {
@@ -127,31 +140,10 @@ export const [GuardsProvider, useGuards] = createContextHook(() => {
     return diffDays;
   };
 
-  const addExercise = async (exercise: Omit<Exercise, 'id' | 'date'>) => {
-    const newExercise: Exercise = {
-      ...exercise,
-      id: Date.now().toString(),
-      date: new Date().toISOString(),
-    };
-    const updatedExercises = [...exercises, newExercise];
-    await saveExercises(updatedExercises);
-    return newExercise;
-  };
-
   const getGuardExercises = (guardId: string) => {
     return exercises
       .filter(e => e.guardId === guardId)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  };
-
-  const deleteInspection = async (inspectionId: string) => {
-    const updatedInspections = inspections.filter(i => i.id !== inspectionId);
-    await saveInspections(updatedInspections);
-  };
-
-  const deleteExercise = async (exerciseId: string) => {
-    const updatedExercises = exercises.filter(e => e.id !== exerciseId);
-    await saveExercises(updatedExercises);
   };
 
   const getLastExerciseDate = (guardId: string) => {

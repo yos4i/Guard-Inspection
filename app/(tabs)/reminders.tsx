@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useGuardReminders, useSortedGuardsByExercise, useGuards } from '@/contexts/GuardsProvider';
-import { Shield, Dumbbell, Timer, LogOut } from 'lucide-react-native';
+import { Shield, Dumbbell, Timer, LogOut, Plus } from 'lucide-react-native';
 import { useAuth } from '@/contexts/AuthProvider';
 
 type CategoryType = 'guards' | 'exercises';
@@ -143,7 +143,15 @@ export default function RemindersScreen() {
 
     return (
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>כל התרגילים</Text>
+        <View style={styles.sectionHeaderWithButton}>
+          <TouchableOpacity
+            onPress={() => router.push('/add-guard')}
+            style={styles.addButtonCircle}
+          >
+            <Plus size={24} color="#FFFFFF" strokeWidth={2.5} />
+          </TouchableOpacity>
+          <Text style={styles.sectionTitle}>כל התרגילים</Text>
+        </View>
         <FlatList
           data={sortedGuardsByExercise}
           scrollEnabled={false}
@@ -453,5 +461,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600' as const,
     marginTop: 2,
+  },
+  sectionHeaderWithButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  addButtonCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#2563EB',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
 });

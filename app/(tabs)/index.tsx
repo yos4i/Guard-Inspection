@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useGuards, useSortedGuards } from '@/contexts/GuardsProvider';
-import { UserCircle, Plus, Trash2, ClipboardList } from 'lucide-react-native';
+import { UserCircle, Trash2, ClipboardList } from 'lucide-react-native';
 
 export default function GuardsScreen() {
   const router = useRouter();
@@ -58,14 +58,6 @@ export default function GuardsScreen() {
         options={{
           title: 'ביקורות',
           headerTitleAlign: 'center',
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => router.push('/add-guard')}
-              style={styles.addButton}
-            >
-              <Plus size={24} color="#2563EB" />
-            </TouchableOpacity>
-          ),
         }}
       />
 

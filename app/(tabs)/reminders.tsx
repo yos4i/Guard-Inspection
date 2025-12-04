@@ -84,7 +84,7 @@ export default function RemindersScreen() {
                         (1000 * 60 * 60 * 24)
                     )
                 )
-              : 0;
+              : 30;
 
             const getTimerColor = (days: number) => {
               if (days >= 15 && days <= 30) return '#10B981';

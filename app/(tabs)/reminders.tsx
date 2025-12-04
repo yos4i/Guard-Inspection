@@ -143,7 +143,7 @@ export default function RemindersScreen() {
 
     return (
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>כל הביקורות</Text>
+        <Text style={styles.sectionTitle}>כל התרגילים</Text>
         <FlatList
           data={sortedGuardsByExercise}
           scrollEnabled={false}

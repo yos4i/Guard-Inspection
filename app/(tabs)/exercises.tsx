@@ -6,31 +6,15 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
-import { Dumbbell, UserCircle, Trash2 } from 'lucide-react-native';
+import { Dumbbell, UserCircle } from 'lucide-react-native';
 import { useGuards, useSortedGuardsByExercise } from '@/contexts/GuardsProvider';
 
 export default function ExercisesScreen() {
-  const { isLoading, getLastExerciseDate, deleteGuard } = useGuards();
+  const { isLoading, getLastExerciseDate } = useGuards();
   const guards = useSortedGuardsByExercise();
   const router = useRouter();
-
-  const handleDelete = (guardId: string, name: string) => {
-    Alert.alert(
-      'מחיקת מאבטח',
-      `האם אתה בטוח שברצונך למחוק את ${name}?`,
-      [
-        { text: 'ביטול', style: 'cancel' },
-        {
-          text: 'מחק',
-          style: 'destructive',
-          onPress: () => deleteGuard(guardId),
-        },
-      ]
-    );
-  };
 
   if (isLoading) {
     return (
@@ -102,12 +86,7 @@ export default function ExercisesScreen() {
                       <Text style={styles.guardPhone}>טלפון: {item.phone}</Text>
                     </View>
                   </View>
-                  <TouchableOpacity
-                    onPress={() => handleDelete(item.id, `${item.firstName} ${item.lastName}`)}
-                    style={styles.deleteButton}
-                  >
-                    <Trash2 size={20} color="#DC2626" />
-                  </TouchableOpacity>
+
                 </View>
 
                 <View style={styles.statusContainer}>
@@ -221,9 +200,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
   },
-  deleteButton: {
-    padding: 8,
-  },
+
   statusContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

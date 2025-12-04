@@ -5,32 +5,16 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useGuards, useSortedGuards } from '@/contexts/GuardsProvider';
-import { UserCircle, Trash2, ClipboardList } from 'lucide-react-native';
+import { UserCircle, ClipboardList } from 'lucide-react-native';
 
 export default function GuardsScreen() {
   const router = useRouter();
-  const { deleteGuard, isLoading, getDaysUntilNextInspection } = useGuards();
+  const { isLoading, getDaysUntilNextInspection } = useGuards();
   const guards = useSortedGuards();
-
-  const handleDelete = (guardId: string, name: string) => {
-    Alert.alert(
-      'מחיקת ביקורות',
-      `האם אתה בטוח שברצונך למחוק את ${name}?`,
-      [
-        { text: 'ביטול', style: 'cancel' },
-        {
-          text: 'מחק',
-          style: 'destructive',
-          onPress: () => deleteGuard(guardId),
-        },
-      ]
-    );
-  };
 
   const getStatusColor = (days: number) => {
     if (days < 0) return '#DC2626';
@@ -91,12 +75,7 @@ export default function GuardsScreen() {
                       <Text style={styles.guardPhone}>טלפון: {item.phone}</Text>
                     </View>
                   </View>
-                  <TouchableOpacity
-                    onPress={() => handleDelete(item.id, `${item.firstName} ${item.lastName}`)}
-                    style={styles.deleteButton}
-                  >
-                    <Trash2 size={20} color="#DC2626" />
-                  </TouchableOpacity>
+
                 </View>
 
                 <View style={styles.statusContainer}>
@@ -217,9 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
   },
-  deleteButton: {
-    padding: 8,
-  },
+
   statusContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

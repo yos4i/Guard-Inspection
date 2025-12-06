@@ -12,7 +12,12 @@ app.use("*", async (c, next) => {
   await next();
 });
 
-app.use("*", cors());
+app.use("*", cors({
+  origin: ['http://localhost:8081', 'http://localhost:19006', 'http://127.0.0.1:8081', 'http://127.0.0.1:19006'],
+  credentials: true,
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization', 'authorization'],
+}));
 
 app.use(
   "/trpc/*",

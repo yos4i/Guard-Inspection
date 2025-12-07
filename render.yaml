@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: kabat-backend
+    env: node
+    buildCommand: npm install --legacy-peer-deps
+    startCommand: npx tsx server.ts
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: EXPO_PUBLIC_FIREBASE_PROJECT_ID
+        sync: false

@@ -19,7 +19,8 @@ app.use("*", cors({
     'http://127.0.0.1:8081',
     'http://127.0.0.1:19006',
     'https://kabat-f9219.web.app',
-    'https://kabat-f9219.firebaseapp.com'
+    'https://kabat-f9219.firebaseapp.com',
+    'https://kabat-backend.onrender.com'
   ],
   credentials: true,
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

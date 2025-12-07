@@ -7,19 +7,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const trpc = createTRPCReact<AppRouter>();
 
 const getBaseUrl = () => {
-  // For web builds, always use /api (handled by API routes in app/api)
-  if (typeof window !== 'undefined') {
-    return '/api';
-  }
-
-  // For native mobile, use the env variable or throw error
+  // Use environment variable if set (for production backend on Render)
   const apiUrl = process.env.EXPO_PUBLIC_RORK_API_BASE_URL;
   if (apiUrl) {
     return apiUrl;
   }
 
+  // For web builds without env var, try /api (won't work on static hosting)
+  if (typeof window !== 'undefined') {
+    return '/api';
+  }
+
   throw new Error(
-    "No base url found for native app. Please set EXPO_PUBLIC_RORK_API_BASE_URL"
+    "No base url found. Please set EXPO_PUBLIC_RORK_API_BASE_URL"
   );
 };
 
